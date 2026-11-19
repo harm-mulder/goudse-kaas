@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Goudse Kaas</title>
+<meta name="theme-color" content="#2b2118">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Goudse Kaas">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f8f2e4; --card:#fffdf7; --ink:#2b2118; --muted:#76685a; --line:#e8dcc4;
+  --gold:#e3a72a; --gold-d:#a8720e; --rind:#9c5a1c; --whey:#5f8a3e; --red:#b23a2a;
+  --chip:#f1e6cd; --shadow:0 1px 2px rgba(43,33,24,.06),0 4px 16px rgba(43,33,24,.06);
+  --r:16px; --head:"Fraunces",Georgia,serif;
+  --sat:env(safe-area-inset-top,0px); --sab:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,sans-serif}
+body{padding-top:var(--sat);padding-bottom:calc(76px + var(--sab));min-height:100vh}
+button,input,select,textarea{font:inherit;color:inherit}
+h1,h2,h3{font-family:var(--head);font-weight:700;letter-spacing:-.01em;margin:0}
+.top{position:sticky;top:0;z-index:20;background:var(--ink);color:#fbf3df;padding:10px 16px 12px;padding-top:calc(10px + var(--sat));margin-top:calc(-1 * var(--sat))}
+.top-row{display:flex;align-items:center;gap:10px}
+.logo{width:30px;height:30px;flex:none}
+.top h1{font-size:21px;flex:1}
+.top small{display:block;font:500 12px/1.2 -apple-system,sans-serif;color:#cdbb97;letter-spacing:0}
+.iconbtn{background:rgba(255,255,255,.1);border:0;border-radius:10px;color:#fbf3df;padding:7px 10px;font-size:13px;font-weight:600}
+.iconbtn.on{background:var(--gold);color:var(--ink)}
+.timerbar{margin-top:10px;display:flex;align-items:center;gap:10px;background:#3a2d21;border-radius:12px;padding:8px 12px}
+.timerbar .lbl{flex:1;font-size:13px;color:#e9d9b6;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.timerbar .t{font:700 22px/1 ui-monospace,"SF Mono",Menlo,monospace;color:var(--gold)}
+.timerbar.done{background:var(--whey);animation:pulse 1s infinite}
+.timerbar.done .t,.timerbar.done .lbl{color:#fff}
+@keyframes pulse{50%{opacity:.75}}
+main{padding:14px 14px 24px;max-width:680px;margin:0 auto}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;box-shadow:var(--shadow);margin-bottom:12px}
+.card h2{font-size:22px;margin-bottom:6px}
+.card h3{font-size:17px;margin:14px 0 6px}
+.muted{color:var(--muted)} .small{font-size:13px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.spread{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.btn{border:0;border-radius:12px;padding:13px 16px;font-weight:650;background:var(--chip);color:var(--ink);cursor:pointer;min-height:46px}
+.btn.primary{background:var(--ink);color:#fbf3df}
+.btn.gold{background:var(--gold);color:var(--ink)}
+.btn.green{background:var(--whey);color:#fff}
+.btn.danger{background:#f6dcd6;color:var(--red)}
+.btn.ghost{background:transparent;border:1px solid var(--line)}
+.btn.block{width:100%}
+.btn.sm{padding:8px 12px;min-height:36px;font-size:14px;border-radius:10px}
+.btn:disabled{opacity:.45}
+.chip{display:inline-flex;align-items:center;gap:4px;background:var(--chip);border-radius:999px;padding:4px 10px;font-size:13px;font-weight:600}
+.chip.gold{background:#f7e2b0;color:#6b4709}
+.chip.green{background:#dfeccf;color:#3d5c24}
+.chip.red{background:#f6dcd6;color:var(--red)}
+.targets{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.target{background:var(--ink);color:#fbf3df;border-radius:12px;padding:8px 12px}
+.target b{display:block;font:700 20px/1.1 var(--head);color:var(--gold)}
+.target span{font-size:12px;color:#d9c8a6}
+.dose{border:1.5px solid var(--gold);background:#fff8e6;border-radius:14px;padding:4px 14px;margin:12px 0}
+.dose .d{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px dashed #ecd9a8}
+.dose .d:last-child{border-bottom:0}
+.dose .d .v{font:700 19px/1.2 var(--head);white-space:nowrap;text-align:right}
+.dose .d .s{display:block;font-size:12.5px;color:var(--muted);font-weight:400}
+ol.steps,ul.list{padding-left:20px;margin:8px 0}
+ol.steps li,ul.list li{margin:5px 0}
+details{border-top:1px solid var(--line);padding:10px 0}
+details:last-of-type{border-bottom:1px solid var(--line)}
+summary{font-weight:650;cursor:pointer;list-style:none;display:flex;justify-content:space-between}
+summary::after{content:"+";color:var(--muted);font-weight:400;font-size:20px;line-height:1}
+details[open] summary::after{content:"–"}
+details p,details ul{margin:8px 0 2px}
+.progress{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin:8px 0 4px}
+.progress i{display:block;height:100%;background:var(--gold);border-radius:6px}
+.field{display:flex;flex-direction:column;gap:4px;margin:8px 0}
+.field label{font-size:13px;font-weight:600;color:var(--muted)}
+.inp{display:flex;min-width:0;align-items:center;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.inp input,.inp select{flex:1;width:100%;color:var(--ink);border:0;background:transparent;padding:12px;min-width:0;font-size:17px;outline:none}
+.inp .u{padding:0 12px;color:var(--muted);font-size:14px}
+textarea{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff;min-height:70px;font-size:16px;outline:none}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
+.timers{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.tmr{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:14px;padding:10px 12px;background:#fff}
+.tmr .n{flex:1}
+.tmr .n b{display:block}
+.tmr .clock{font:700 20px/1 ui-monospace,"SF Mono",Menlo,monospace}
+.tmr.run{border-color:var(--gold);background:#fff8e6}
+.tmr.fin{border-color:var(--whey);background:#eef5e6}
+.nav{display:flex;gap:8px;position:sticky;z-index:10;bottom:calc(72px + var(--sab));padding:10px 0 2px;background:linear-gradient(transparent,var(--bg) 30%)}
+.nav .btn{flex:1}
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;background:#fffdf7;border-top:1px solid var(--line);display:flex;padding-bottom:var(--sab)}
+.tabs button{flex:1;border:0;background:none;padding:8px 0 9px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;font-weight:600;color:var(--muted)}
+.tabs button svg{width:24px;height:24px}
+.tabs button.on{color:var(--ink)}
+.tabs button.on svg{color:var(--gold-d)}
+.list-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.list-item:last-child{border-bottom:0}
+.list-item .grow{flex:1;min-width:0}
+.wheel{width:44px;height:44px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#f7d37a,#e3a72a 55%,#b47c14);flex:none;display:grid;place-items:center;font:700 14px var(--head);color:#5a3b06}
+.task{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line)}
+.task:last-child{border-bottom:0}
+.check{width:28px;height:28px;border-radius:8px;border:2px solid var(--line);background:#fff;flex:none;display:grid;place-items:center;font-weight:800;color:#fff;cursor:pointer}
+.check.on{background:var(--whey);border-color:var(--whey)}
+.daylbl{font-weight:700;margin:14px 0 2px;font-size:14px;color:var(--rind);text-transform:capitalize}
+.steplist .si{display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.steplist .si .num{width:26px;height:26px;border-radius:50%;background:var(--chip);display:grid;place-items:center;font-size:12px;font-weight:700;flex:none}
+.steplist .si.done .num{background:var(--whey);color:#fff}
+.steplist .si.cur .num{background:var(--gold)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(90px + var(--sab));background:var(--ink);color:#fbf3df;padding:10px 16px;border-radius:12px;z-index:50;font-size:14px;box-shadow:var(--shadow);max-width:90vw}
+.modal{position:fixed;inset:0;background:rgba(43,33,24,.45);z-index:60;display:flex;align-items:flex-end;justify-content:center}
+.modal .sheet{background:var(--card);width:100%;max-width:680px;border-radius:20px 20px 0 0;padding:18px 16px calc(18px + var(--sab));max-height:85vh;overflow:auto}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:14px}
+.kv dt{color:var(--muted)} .kv dd{margin:0;font-weight:600}
+table.t{width:100%;border-collapse:collapse;font-size:14px}
+table.t td,table.t th{padding:8px 4px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.t th{font-size:12px;color:var(--muted);font-weight:600}
+table.t td.r,table.t th.r{text-align:right;white-space:nowrap}
+.stars button{background:none;border:0;font-size:26px;color:var(--line);padding:0 2px}
+.stars button.on{color:var(--gold)}
+.note{background:#f3ead6;border-radius:12px;padding:10px 12px;font-size:14px;margin:10px 0}
+.note.warn{background:#fbe3dc;color:#6e2216}
+.sync{font-size:12px;color:var(--muted);text-align:center;margin-top:10px}
+.hero{background:var(--ink);color:#fbf3df;border:0}
+.hero h2{color:#fbf3df}
+.hero .muted{color:#cdbb97}
+.seg{display:flex;background:var(--chip);border-radius:12px;padding:3px;gap:3px}
+.seg button{flex:1;border:0;background:none;border-radius:9px;padding:8px 4px;font-weight:600;font-size:14px}
+.seg button.on{background:#fff;box-shadow:var(--shadow)}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-row">
+    <svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><path d="M3 20 L16 6 L29 20 Z" fill="#e3a72a"/><path d="M3 20 h26 v5 a1 1 0 0 1-1 1 H4 a1 1 0 0 1-1-1z" fill="#c78a17"/><circle cx="12" cy="17" r="1.8" fill="#b47c14"/><circle cx="19" cy="13" r="1.3" fill="#b47c14"/><circle cx="21" cy="19" r="1.5" fill="#b47c14"/></svg>
+    <h1 id="hdrTitle">Goudse Kaas<small id="hdrSub">Van rauwe melk tot kaas</small></h1>
+    <button class="iconbtn" id="wakeBtn" data-act="wake" hidden>Scherm aan</button>
+  </div>
+  <div id="timerbar"></div>
+</header>
+<main id="view"></main>
+<nav class="tabs" id="tabs"></nav>
+<input type="file" id="importFile" accept="application/json,.json" hidden>
+<script>
+"use strict";
+/* ============================================================
+   Goudse Kaas — stap-voor-stap app (Mulder)
+   Werkt als losse PWA (localStorage + agenda-export) en als
+   Claude-artifact (db-opslag, synchroon over apparaten).
+   ============================================================ */
+
+// ---------- Standaardinstellingen (afgeleid van hobbykaas.nl / Chr. Hansen) ----------
+const DEFAULTS = {
+  liters: 60,
+  chnUPer100: 10,          // CHN-19: 50U per 500 L = 10U per 100 L
+  chnBagGram: 0,           // gewicht inhoud 50U-zakje (g) — eenmalig wegen
+  preRipenMin: 45,         // voorverzuren
+  rennetImcu: 145,         // Naturen Premium 145
+  imcuPerL: 40,            // fabrikant: 30–60 IMCU/L
+  flocMult: 3,             // stremtijd = vlokpunt × factor
+  salpeterOn: true,        // rauwe melk: 0,05 ml/L (35%)
+  salpeterMlPerL: 0.05,
+  cacl2On: false,          // rauwe melk meestal niet nodig
+  cacl2MlPerL: 0.15,
+  litersPerKg: 10,         // opbrengst
+  whey1Pct: 35, whey2Pct: 15,
+  washWaterTemp: 62,
+  boreMm: 50,              // cilinderboring pneumatische pers
+  pressRatio: 1,           // overbrenging (hefboom), 1 = direct
+  pressEff: 0.9,           // rendement (wrijving)
+  pressConfigured: false,
+  moldDiamCm: 0,
+  press: [
+    {mult:2, min:30, label:"Licht aanpersen"},
+    {mult:4, min:30, label:"Opvoeren"},
+    {mult:6, min:60, label:"Middeldruk"},
+    {mult:8, min:180, label:"Eindpers"}
+  ],
+  brineHPerKg: 8,
+  brinePct: 21,
+  brineL: 30,
+  ripenTempMin: 10, ripenTempMax: 13,
+  targetWeeks: 12,
+  reminderTime: "19:00",
+  activeId: null,
+  updatedAt: 0
+};
+
+// ---------- Opslag ----------
+const LS_KEY = "goudse-kaas-v1";
+const IS_ARTIFACT = !!(window.claude && typeof window.claude.use === "function");
+let S = { settings: clone(DEFAULTS), batches: {} };
+let remote = null, syncMsg = IS_ARTIFACT ? "Verbinden met opslag…" : "Opgeslagen op dit toestel";
+const pending = new Set(); let flushTimer = null, flushing = false;
+
+function clone(o){ return JSON.parse(JSON.stringify(o)); }
+function lsLoad(){
+  try{ const raw = localStorage.getItem(LS_KEY); if(!raw) return;
+    const d = JSON.parse(raw);
+    S.settings = Object.assign(clone(DEFAULTS), d.settings||{});
+    S.batches = d.batches||{};
+  }catch(e){}
+}
+function lsSave(){ try{ localStorage.setItem(LS_KEY, JSON.stringify(S)); }catch(e){} }
+function saveSettings(){ S.settings.updatedAt = Date.now(); lsSave(); queueWrite("settings"); }
+function saveBatch(b){ b.updatedAt = Date.now(); S.batches[b.id] = b; lsSave(); queueWrite("b_"+b.id); }
+function deleteBatch(id){ delete S.batches[id]; if(S.settings.activeId===id){ S.settings.activeId=null; saveSettings(); } lsSave(); queueWrite("b_"+id); }
+
+function queueWrite(key){
+  if(!remote) return;
+  pending.add(key);
+  clearTimeout(flushTimer); flushTimer = setTimeout(flush, 800);
+}
+async function flush(){
+  if(!remote || flushing) return;
+  flushing = true;
+  try{
+    while(pending.size){
+      const key = pending.values().next().value; pending.delete(key);
+      const ref = remote.col.doc(key);
+      try{
+        if(key==="settings") await ref.set(clone(S.settings));
+        else { const b = S.batches[key.slice(2)]; if(b) await ref.set(clone(b)); else await ref.delete(); }
+      }catch(e){
+        if(e && e.code==="unavailable"){ pending.add(key); await new Promise(r=>setTimeout(r, 1500+Math.random()*1500)); }
+        else { setSync("Online opslaan lukt niet ("+(e&&e.code||"fout")+"). Gegevens staan lokaal; maak een back-up."); }
+      }
+    }
+  } finally { flushing = false; }
+}
+function setSync(m){ syncMsg = m; const el = document.getElementById("syncMsg"); if(el) el.textContent = m; }
+
+async function initRemote(){
+  if(!IS_ARTIFACT) return;
+  try{
+    const [db, user] = await Promise.all([claude.use("db"), claude.use("user")]);
+    if(!db || !user){ setSync("Opslag alleen in deze browser (online opslag niet beschikbaar)"); return; }
+    const uid = await user.id();
+    if(!uid){ setSync("Log in om je batches op al je apparaten te bewaren"); return; }
+    const col = db.collection("data/users/"+uid);
+    remote = { col };
+    let synced = false;
+    const t = setTimeout(()=>{ if(!synced) setSync("Online opslag nog niet bereikbaar — wijzigingen staan lokaal"); }, 10000);
+    col.onSnapshot(snap=>{
+      let changed = false;
+      snap.docChanges().forEach(ch=>{
+        const id = ch.doc.id, data = ch.doc.data();
+        if(ch.type==="removed"){
+          if(id.startsWith("b_") && S.batches[id.slice(2)] && !snap.metadata.fromCache){ delete S.batches[id.slice(2)]; changed = true; }
+          return;
+        }
+        if(id==="settings"){
+          if((data.updatedAt||0) > (S.settings.updatedAt||0)){ S.settings = Object.assign(clone(DEFAULTS), data); changed = true; }
+        } else if(id.startsWith("b_")){
+          const loc = S.batches[id.slice(2)];
+          if(!loc || (data.updatedAt||0) > (loc.updatedAt||0)){ S.batches[id.slice(2)] = clone(data); changed = true; }
+        }
+      });
+      if(!snap.metadata.fromCache && !synced){
+        synced = true; clearTimeout(t); setSync("Opgeslagen in je Claude-account");
+        const ids = new Set(snap.docs.map(d=>d.id));
+        if(!ids.has("settings") && S.settings.updatedAt) queueWrite("settings");
+        Object.keys(S.batches).forEach(id=>{ if(!ids.has("b_"+id)) queueWrite("b_"+id); });
+      }
+      if(changed){ lsSave(); softRender(); }
+    }, err=>{ clearTimeout(t); setSync("Online opslag niet beschikbaar ("+err.code+") — gegevens staan lokaal"); });
+  }catch(e){ setSync("Opslag alleen in deze browser"); }
+}
+
+// ---------- Helpers ----------
+const $ = s => document.querySelector(s);
+const nf = (n, d=1) => (n==null||isNaN(n)) ? "–" : Number(n).toLocaleString("nl-NL",{minimumFractionDigits:0, maximumFractionDigits:d});
+const esc = s => String(s==null?"":s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const pad = n => String(n).padStart(2,"0");
+const fmtTime = ts => { const d=new Date(ts); return pad(d.getHours())+":"+pad(d.getMinutes()); };
+const fmtDate = (ts, o) => new Date(ts).toLocaleDateString("nl-NL", o||{day:"numeric",month:"short",year:"numeric"});
+const fmtDur = ms => { ms=Math.max(0,ms); const s=Math.round(ms/1000), h=Math.floor(s/3600), m=Math.floor(s%3600/60), x=s%60; return h? h+":"+pad(m)+":"+pad(x) : pad(m)+":"+pad(x); };
+const fmtMin = min => min>=60 ? (Math.floor(min/60)+" u"+(min%60? " "+(min%60)+" min":"")) : min+" min";
+const dayKey = d => { d=new Date(d); return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()); };
+const startOfDay = ts => { const d=new Date(ts); d.setHours(0,0,0,0); return d.getTime(); };
+const DAY = 864e5;
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+function toast(msg){ const t=document.createElement("div"); t.className="toast"; t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.remove(), 2600); }
+function num(v){ if(v===""||v==null) return null; const n = parseFloat(String(v).replace(",", ".")); return isNaN(n)?null:n; }
+
+// ---------- Berekeningen ----------
+function doses(L, s){
+  const chnU = L * s.chnUPer100 / 100;
+  const rennetMl = L * s.imcuPerL / s.rennetImcu;
+  const kg = L / s.litersPerKg;
+  return {
+    L, kg,
+    chnU, chnG: s.chnBagGram>0 ? chnU * s.chnBagGram / 50 : null, chnTsp: L/40,
+    rennetMl, rennetWater: Math.round(rennetMl*10/10)*10,
+    salpeterMl: s.salpeterOn ? L*s.salpeterMlPerL : 0,
+    cacl2Ml: s.cacl2On ? L*s.cacl2MlPerL : 0,
+    whey1: L*s.whey1Pct/100, whey2: L*s.whey2Pct/100
+  };
+}
+function mixWater(vol, tNow, tTarget, tWater){
+  if(tWater<=tTarget || tTarget<=tNow) return 0;
+  return vol*(tTarget-tNow)/(tWater-tTarget);
+}
+function cylAreaCm2(s){ const r = s.boreMm/20; return Math.PI*r*r; }
+function kgToBar(kg, s){ return kg / (cylAreaCm2(s) * 1.01972 * (s.pressRatio||1) * (s.pressEff||1)); }
+function barToKg(bar, s){ return bar * cylAreaCm2(s) * 1.01972 * (s.pressRatio||1) * (s.pressEff||1); }
+function moldArea(s){ return s.moldDiamCm>0 ? Math.PI*Math.pow(s.moldDiamCm/2,2) : 0; }
+function brineSaltKg(waterL, pct){ return waterL * pct/(100-pct); }
+function brineDensity(pct){ return 1 + 0.0073*pct; } // benadering NaCl-oplossing bij ±15 °C
+function cheeseKg(b){ const w = stepVal(b,"rest","weight"); return w || doses(b.liters, b.s).kg; }
+function stepVal(b, id, k){ const st=b.steps&&b.steps[id]; return st&&st.values ? num(st.values[k]) : null; }
+
+// ---------- Stappen ----------
+function buildSteps(b){
+  const s = b.s, d = doses(b.liters, s);
+  const W = cheeseKg(b);
+  const steps = [];
+
+  steps.push({id:"prep", phase:"Voorbereiding", title:"Klaarzetten & hygiëne",
+    targets:[["Melk",nf(b.liters,0)+" L"],["Verwachte kaas","± "+nf(d.kg,1)+" kg"]],
+    body:`<p>Zet alles klaar vóór de melk op temperatuur is; tijdens het stremmen en wassen heb je geen handen vrij.</p>
+      <ul class="list">
+        <li>Kaasketel/-kuip, thermometer, pH-meter (gekalibreerd met de buffers), lange roerspaan of wrongelharp/-mes.</li>
+        <li>Precisieweegschaal, doseerspuiten, maatbeker voor stremselverdunning.</li>
+        <li>Kaasvorm met volger, kaasdoek (uitkoken), pers met luchtcilinder.</li>
+        <li>Pan met waswater (±${nf(d.whey1*0.25+d.whey2*0.3,0)} L) en een manier om het op ${s.washWaterTemp} °C te brengen.</li>
+        <li>CHN-19 pas vlak voor gebruik uit de vriezer; stremsel uit de koelkast.</li>
+      </ul>`,
+    dose:[["CHN-19 (zuursel)", d.chnG!=null? nf(d.chnG,2)+" g" : nf(d.chnU,1)+" U", d.chnG!=null? nf(d.chnU,1)+" U" : "± "+tspTxt(d.chnTsp)+" — vul zakgewicht in bij Instellingen voor grammen"],
+          ["Salpeter 35%", s.salpeterOn? nf(d.salpeterMl,1)+" ml":"niet", s.salpeterOn?"0,05 ml per liter":""],
+          ["Calciumchloride 35%", s.cacl2On? nf(d.cacl2Ml,1)+" ml":"niet", s.cacl2On? nf(s.cacl2MlPerL,2)+" ml/L":"rauwe melk: alleen bij slappe stremming"],
+          ["Naturen 145 stremsel", nf(d.rennetMl,1)+" ml", s.imcuPerL+" IMCU/L, verdund in ±"+d.rennetWater+" ml water"]],
+    why:`Rauwe melk bevat al eigen bacteriën. Schoon werken (alles heet afspoelen of ontsmetten, geen restjes oude wei) voorkomt dat ongewenste bacteriën een voorsprong krijgen op je zuursel. Klaarzetten voorkomt haast op de momenten dat tijd en temperatuur er écht toe doen.`,
+    attention:`<ul><li>Gebruik melk van gezonde koeien, zo vers mogelijk (bij voorkeur van dezelfde ochtend) en koel bewaard.</li><li>Kalibreer de pH-meter vóór iedere batch; een afwijking van 0,1 pH maakt al verschil.</li><li>Kaas van rauwe melk is jong niet geschikt voor zwangeren en mensen met verminderde weerstand.</li></ul>`,
+    mistakes:`<ul><li>Stremsel of zuursel pas zoeken als de melk al op temperatuur is.</li><li>Kaasdoek met zeepresten — geeft bijsmaak en remt het zuursel.</li></ul>`,
+    inputs:[{k:"milkSrc",label:"Herkomst / melkdatum",type:"text"}]
+  });
+
+  steps.push({id:"heat", phase:"Melk", title:"Melk opwarmen tot 30–31 °C",
+    targets:[["Temperatuur","30–31 °C"],["pH melk","6,6–6,7"]],
+    body:`<ol class="steps"><li>Warm de melk langzaam op, al roerend, bij voorkeur au bain-marie of met een dubbelwandige ketel.</li><li>Stop op 30 °C; de temperatuur loopt vaak nog iets na.</li><li>Meet en noteer de begin-pH.</li></ol>`,
+    why:`Het mesofiele zuursel (CHN-19) werkt optimaal rond 30 °C. Te warm (>33 °C) verandert de balans tussen de bacteriestammen en geeft een andere smaak en minder oogvorming; te koud en de verzuring komt traag op gang.`,
+    attention:`<ul><li>Verwarm niet te snel: de melk aan de wand wordt dan veel heter dan in het midden.</li><li>Begin-pH boven 6,75 of onder 6,55? Noteer het: dat verklaart later afwijkende stremtijden.</li></ul>`,
+    mistakes:`<ul><li>Doorschieten naar 34–35 °C en dan "even laten afkoelen" — dat duurt bij 60 L lang. Stop liever te vroeg.</li></ul>`,
+    inputs:[{k:"temp",label:"Temperatuur melk",unit:"°C"},{k:"ph",label:"pH melk",unit:"pH"}]
+  });
+
+  steps.push({id:"culture", phase:"Verzuren", title:"Zuursel CHN-19 toevoegen & voorverzuren",
+    targets:[["Voorverzuren",s.preRipenMin+" min"],["Temp.","30–31 °C"],["Doel-pH","−0,05 tot −0,1"]],
+    dose:[["CHN-19", d.chnG!=null? nf(d.chnG,2)+" g" : nf(d.chnU,1)+" U", d.chnG!=null? "= "+nf(d.chnU,1)+" U (10U per 100 L)" : "± "+tspTxt(d.chnTsp)+" (kleine ¼ tl per 10 L)"]],
+    body:`<ol class="steps"><li>Haal het zakje uit de vriezer, laat het niet ontdooien. Weeg de dosis met een droge, schone lepel.</li><li>Strooi het poeder over het melkoppervlak, laat 2 minuten bevochtigen.</li><li>Roer daarna 2 minuten rustig door de hele ketel.</li><li>Zakje direct dichtvouwen en terug in de vriezer.</li><li>Houd 30–31 °C aan en laat ${s.preRipenMin} minuten voorverzuren.</li></ol>`,
+    timers:[{label:"Voorverzuren", min:s.preRipenMin}],
+    why:`CHN-19 is een LD-cultuur: melkzuurbacteriën voor de verzuring plus aromavormers (diacetylactis en Leuconostoc) die smaak en een beetje CO₂ geven — de kleine oogjes van Goudse kaas. Het voorverzuren geeft de bacteriën een voorsprong en verlaagt de pH een fractie, waardoor het stremsel beter werkt.`,
+    attention:`<ul><li>Vocht in het zakje maakt de rest van de cultuur waardeloos — altijd droge spullen.</li><li>Met rauwe melk zijn er al bacteriën actief: de pH kan sneller dalen dan bij winkelmelk. Meet aan het eind en noteer.</li></ul>`,
+    mistakes:`<ul><li>Het poeder in één klont erin gooien en direct hard roeren — klontjes lossen slecht op.</li><li>Het zakje open laten liggen tijdens het maken.</li></ul>`,
+    inputs:[{k:"ph",label:"pH na voorverzuren",unit:"pH"},{k:"temp",label:"Temperatuur",unit:"°C"}]
+  });
+
+  steps.push({id:"additives", phase:"Verzuren", title:(s.cacl2On?"Salpeter en calciumchloride":"Salpeter")+" toevoegen",
+    targets:[["Temp.","30–31 °C"]],
+    dose:[["Salpeter 35%", s.salpeterOn? nf(d.salpeterMl,1)+" ml":"overslaan", s.salpeterOn?"0,05 ml/L — met doseerspuit":"uitgezet bij Instellingen"],
+          ["Calciumchloride 35%", s.cacl2On? nf(d.cacl2Ml,1)+" ml":"overslaan", s.cacl2On?"eerst verdunnen in ± 10× water":"bij rauwe melk meestal niet nodig"]],
+    body:`<ol class="steps"><li>Dien de salpeter toe met de doseerspuit, verspreid over het oppervlak.</li>${s.cacl2On?"<li>Verdun de calciumchloride in een bekertje koud water en giet het verspreid in de melk.</li>":""}<li>Roer 1 minuut goed door.</li></ol>`,
+    why:`Salpeter (nitraat) remt boterzuurbacteriën (Clostridium-sporen) die uit kuilvoer in rauwe melk kunnen komen. Zonder salpeter kunnen die na weken "laat los" geven: scheuren, grote gaten en een ranzige boterzuurlucht. Calciumchloride vult opgelost calcium aan en maakt de wrongel steviger; rauwe melk heeft dat meestal niet nodig, maar in de herfst/winter of bij een slappe wrongel wel.`,
+    attention:`<ul><li>Salpeter en calciumchloride nooit samen in één bekertje mengen.</li><li>Calciumchloride nooit onverdund toevoegen: het slaat dan plaatselijk eiwit neer.</li></ul>`,
+    mistakes:`<ul><li>Te veel salpeter "voor de zekerheid": 0,05 ml/L is voldoende en er geldt een wettelijk maximum.</li></ul>`,
+    inputs:[]
+  });
+
+  steps.push({id:"rennet", phase:"Stremmen", title:"Stremsel toevoegen",
+    targets:[["Temp.","30–31 °C"],["Stremsel",nf(d.rennetMl,1)+" ml"]],
+    dose:[["Naturen Premium 145", nf(d.rennetMl,1)+" ml", s.imcuPerL+" IMCU/L × "+nf(b.liters,0)+" L ÷ 145"],
+          ["Verdunnen in", "± "+d.rennetWater+" ml", "koud, chloorvrij water (5–15× de hoeveelheid)"]],
+    body:`<ol class="steps"><li>Verdun het stremsel vlak voor gebruik in koud, chloorvrij water (of 80% water / 20% koude melk als je het water niet vertrouwt).</li><li>Giet het verspreid over het oppervlak en roer 2–3 minuten met lange, rustige halen tot op de bodem.</li><li>Breng de melk tot stilstand: houd de roerspaan even plat tegen de draairichting.</li><li>Druk op <b>Stremsel erin</b> — de app start de klok voor het vlokpunt.</li><li>Dek af en laat de ketel volkomen met rust.</li></ol>`,
+    special:"rennetStart",
+    why:`Stremsel (chymosine) knipt het κ-caseïne van de melkeiwitbolletjes; daardoor plakken ze aan elkaar tot een gel. Verdunnen zorgt dat het gelijkmatig verdeeld is voordat de melk begint te stremmen. Dierlijk lebstremsel zoals Naturen geeft minder kans op bitterheid bij langere rijping.`,
+    attention:`<ul><li>Chloor en een hoge pH van water breken het enzym af — verdun pas vlak voor gebruik.</li><li>Na het stilzetten niet meer roeren of aan de ketel stoten.</li></ul>`,
+    mistakes:`<ul><li>Te lang doorroeren: de gel wordt dan beschadigd terwijl hij al begint te vormen.</li><li>Stremsel verdund laten staan.</li></ul>`,
+    inputs:[{k:"temp",label:"Temperatuur bij stremmen",unit:"°C"}]
+  });
+
+  steps.push({id:"floc", phase:"Stremmen", title:"Vlokpunt bepalen → snijmoment",
+    targets:[["Factor","× "+nf(s.flocMult,1)],["Verwacht","30–40 min totaal"]],
+    body:`<ol class="steps"><li>Leg na ± 8 minuten een licht plastic dopje of schaaltje op het melkoppervlak en geef het met je vinger een duwtje.</li><li>Herhaal elke halve minuut. Zolang het vrij ronddraait is de melk nog vloeibaar.</li><li>Zodra het dopje <b>niet meer draait</b> (de melk "pakt"), druk je op <b>Vlokpunt nu</b>.</li><li>De app rekent de snijtijd uit: vlokpunt × ${nf(s.flocMult,1)}.</li></ol>`,
+    special:"floc",
+    why:`De vlokpuntmethode past zich automatisch aan je melk aan: rauwe melk verschilt per seizoen in eiwit, calcium en zuurgraad. Door de totale stremtijd als veelvoud van het vlokpunt te nemen krijg je elke batch een even stevige wrongel, ongeacht die variatie. Voor Goudse kaas ligt de factor rond 2,5–3,5.`,
+    attention:`<ul><li>Vlokpunt na minder dan 8 min: te veel stremsel of te zure melk. Na meer dan 18 min: te weinig stremsel, te koud of weinig calcium.</li></ul>`,
+    mistakes:`<ul><li>Het dopje te hard duwen of de melk erbij laten bewegen.</li></ul>`,
+    inputs:[]
+  });
+
+  steps.push({id:"cutcheck", phase:"Stremmen", title:"Stremcontrole (clean break)",
+    targets:[["Wei","geelgroen, helder"]],
+    body:`<ol class="steps"><li>Steek een schoon mes of je vinger schuin in de wrongel en til hem langzaam op.</li><li>De wrongel moet strak openbreken, als gekookt eiwit, met scherpe randen.</li><li>De wei die in de breuk loopt is geelgroen en vrijwel helder.</li><li>Nog melkachtig en papperig? Geef 3–5 minuten extra.</li></ol>`,
+    why:`Te vroeg snijden geeft fijne wrongeldeeltjes en vet in de wei (minder opbrengst); te laat snijden geeft een taaie gel die slecht wei afgeeft, waardoor de kaas te vochtig en zuur kan worden.`,
+    attention:`<ul><li>Noteer hoeveel extra tijd nodig was; pas dan volgende keer de factor of stremseldosis aan.</li></ul>`,
+    mistakes:`<ul><li>Op de klok vertrouwen in plaats van de breuk te beoordelen.</li></ul>`,
+    inputs:[{k:"extra",label:"Extra tijd nodig",unit:"min"}]
+  });
+
+  steps.push({id:"cut", phase:"Wrongel", title:"Wrongel snijden tot 0,5–1 cm",
+    targets:[["Korrel","0,5–1 cm"],["Snijden","± 10 min"],["Rust","5 min"]],
+    body:`<ol class="steps"><li>Snijd eerst verticaal in banen van ± 1 cm, daarna haaks daarop.</li><li>Snijd vervolgens horizontaal/schuin (wrongelharp) of draai de blokken voorzichtig om en snijd verder.</li><li>Werk rustig door tot de korrels maïskorrel- tot erwtgroot zijn (0,5–1 cm).</li><li>Laat 5 minuten rusten zodat de korrels een vliesje vormen.</li></ol>`,
+    timers:[{label:"Snijden",min:10},{label:"Rust",min:5}],
+    why:`De korrelgrootte bepaalt hoeveel wei eruit gaat. Kleinere korrels = drogere, stevigere kaas die beter lang rijpt. Gelijkmatige korrels drogen gelijkmatig uit; ongelijke korrels geven vochtige plekken.`,
+    attention:`<ul><li>De eerste snedes zijn het belangrijkst: de wrongel is dan nog kwetsbaar.</li><li>Melkachtige wei = te ruw gesneden of te vroeg.</li></ul>`,
+    mistakes:`<ul><li>Te hard roeren direct na het snijden: dan breekt de wrongel tot "stof" (wrongelstof) dat in de wei verdwijnt.</li></ul>`,
+    inputs:[]
+  });
+
+  steps.push({id:"stir1", phase:"Wrongel", title:"Eerste roerperiode",
+    targets:[["Roeren","15 min"],["Temp.","30–31 °C"]],
+    body:`<ol class="steps"><li>Roer rustig zodat de korrels los van elkaar blijven en niet op de bodem samenklonteren.</li><li>Voer het tempo geleidelijk iets op naarmate de korrels steviger worden.</li></ol>`,
+    timers:[{label:"Roeren",min:15}],
+    why:`Door het roeren krimpen de korrels en persen ze wei uit (synerese). De korrels worden steviger, zodat ze de temperatuurverhoging bij het wassen kunnen hebben.`,
+    attention:`<ul><li>Klonteren de korrels? Iets sneller roeren en door de bodem gaan.</li></ul>`,
+    mistakes:`<ul><li>Te kort roeren: de korrels zijn dan nog te zacht voor het wassen.</li></ul>`,
+    inputs:[]
+  });
+
+  steps.push({id:"whey1", phase:"Wassen", title:"Eerste wei aftappen",
+    targets:[["Aftappen","± "+nf(d.whey1,0)+" L"],["Dat is","± "+s.whey1Pct+"% van de melk"]],
+    body:`<ol class="steps"><li>Laat de korrels 2–3 minuten bezinken.</li><li>Tap of schep wei af tot net boven de wrongel: ± ${nf(d.whey1,0)} L. De wrongel mag niet droog komen te liggen.</li><li>Meet en noteer hoeveel je afgetapt hebt, dat heb je nodig voor de wasberekening.</li></ol>`,
+    why:`Door wei af te tappen en te vervangen door water haal je lactose (melksuiker) weg. Daardoor kunnen de bacteriën later minder zuur vormen: dat geeft de zoete, zachte smaak en de soepele structuur die typisch is voor Goudse kaas.`,
+    attention:`<ul><li>Bewaar wat wei als je de pH wilt volgen of wei-ricotta wilt maken.</li></ul>`,
+    mistakes:`<ul><li>Te veel aftappen: dan klonteren de korrels samen en verwarmt het waswater ongelijk.</li></ul>`,
+    inputs:[{k:"vol",label:"Afgetapt",unit:"L"}]
+  });
+
+  steps.push({id:"wash1", phase:"Wassen", title:"Eerste was tot 33 °C",
+    targets:[["Doel","33 °C"],["Waswater",s.washWaterTemp+" °C"]],
+    special:"wash1",
+    body:`<ol class="steps"><li>Voeg het warme water langzaam toe in een straal langs de rand, terwijl je doorroert.</li><li>Stop als de wrongel/wei 33 °C is.</li><li>Roer 10 minuten, laat daarna 10 minuten bezinken.</li></ol>`,
+    timers:[{label:"Roeren",min:10},{label:"Bezinken",min:10}],
+    why:`Het warme waswater "kookt" de wrongel na: de korrels krimpen verder en worden droger. In twee stappen opwarmen voorkomt dat de buitenkant van de korrels dichtschroeit (korstvorming), waardoor er binnenin vocht achterblijft.`,
+    attention:`<ul><li>Waswater nooit heter dan 65 °C en nooit direct op de wrongel gieten.</li></ul>`,
+    mistakes:`<ul><li>Alles in één keer erbij gieten: plaatselijk te heet.</li></ul>`,
+    inputs:[{k:"water",label:"Waswater toegevoegd",unit:"L"},{k:"temp",label:"Temperatuur na wassen",unit:"°C"}]
+  });
+
+  steps.push({id:"whey2", phase:"Wassen", title:"Tweede wei aftappen",
+    targets:[["Aftappen","± "+nf(d.whey2,0)+" L"]],
+    body:`<ol class="steps"><li>Laat bezinken en tap opnieuw af tot net boven de wrongel: ± ${nf(d.whey2,0)} L.</li><li>Noteer de hoeveelheid.</li></ol>`,
+    why:`Nog een deel lactose eruit; hoe meer je wast, hoe zoeter en milder de kaas. Meer wassen = zoeter, minder wassen = pittiger/zuurder.`,
+    attention:"", mistakes:"",
+    inputs:[{k:"vol",label:"Afgetapt",unit:"L"}]
+  });
+
+  steps.push({id:"wash2", phase:"Wassen", title:"Tweede was tot 36 °C & nawarmen",
+    targets:[["Doel","35–36 °C"],["Roeren","15 min"],["Bezinken","10 min"]],
+    special:"wash2",
+    body:`<ol class="steps"><li>Voeg weer langzaam waswater toe tot 36 °C (35 °C voor een iets zachtere kaas).</li><li>Roer 15 minuten op temperatuur.</li><li>Laat 10 minuten bezinken.</li></ol>`,
+    timers:[{label:"Roeren",min:15},{label:"Bezinken",min:10}],
+    why:`Op 36 °C geven de korrels de laatste wei af. De temperatuur bepaalt mede het vochtgehalte: hoger = drogere kaas, geschikt om langer te rijpen; lager = smeuïger, sneller te eten.`,
+    attention:`<ul><li>Houd 36 °C vast; bij 60 L koelt de ketel langzaam, maar controleer elke 5 minuten.</li></ul>`,
+    mistakes:`<ul><li>Boven 38 °C komen: het mesofiele zuursel raakt dan beschadigd.</li></ul>`,
+    inputs:[{k:"water",label:"Waswater toegevoegd",unit:"L"},{k:"temp",label:"Temperatuur",unit:"°C"}]
+  });
+
+  steps.push({id:"curdcheck", phase:"Wrongel", title:"Wrongeltest",
+    targets:[["pH wei","± 6,3–6,4"]],
+    body:`<ol class="steps"><li>Pak een handvol wrongel en knijp hem samen.</li><li>Hij moet aan elkaar plakken tot een balletje, maar weer uiteenvallen als je er met je duim zacht doorheen wrijft.</li><li>Korrels zijn veerkrachtig, niet meer week of papperig.</li><li>Nog te zacht? Nog 5 minuten roeren op 36 °C.</li><li>Meet de pH van de wei en noteer.</li></ol>`,
+    why:`De handtest is de kaasmakerscheck voor het juiste vochtgehalte. Te natte wrongel geeft een zachte, zure kaas die gaat "lopen"; te droge wrongel sluit niet goed in de vorm en geeft scheurtjes en mechanische gaten.`,
+    attention:"", mistakes:`<ul><li>Te vroeg vormen omdat de klok het zegt.</li></ul>`,
+    inputs:[{k:"ph",label:"pH wei",unit:"pH"},{k:"extra",label:"Extra roertijd",unit:"min"}]
+  });
+
+  steps.push({id:"mould", phase:"Vormen", title:"Onder de wei voorpersen & vormen",
+    targets:[["Onder wei","10 min"],["Uitlekken","15 min"]],
+    body:`<ol class="steps"><li>Duw de wrongel onder de wei naar één kant samen tot een koek (met een plank of je handen), zonder lucht ertussen.</li><li>Leg er een plank op met wat gewicht (± ${nf(W*1,0)}–${nf(W*2,0)} kg) en laat 10 minuten onder de wei aanpersen.</li><li>Tap de wei af, snijd de koek op maat en leg hem in de vorm met (natte) kaasdoek. Vul gelijkmatig; restjes in het midden.</li><li>Vouw de doek glad over de bovenkant, leg de volger erop en laat 15 minuten uitlekken.</li></ol>`,
+    timers:[{label:"Onder wei aandrukken",min:10},{label:"Uitlekken in vorm",min:15}],
+    why:`Door onder de wei samen te persen komt er geen lucht tussen de korrels: zo krijg je een gesloten kaas met alleen de kleine ronde oogjes van het zuursel, in plaats van onregelmatige mechanische gaatjes.`,
+    attention:`<ul><li>Werk vlot: de wrongel moet warm zijn om goed te sluiten.</li><li>Doek zonder plooien, anders krijg je ribbels in de korst.</li></ul>`,
+    mistakes:`<ul><li>Losse korrels in de vorm scheppen en dan pas persen: geeft open structuur.</li></ul>`,
+    inputs:[{k:"ph",label:"pH bij vormen",unit:"pH"}]
+  });
+
+  s.press.forEach((p, i)=>{
+    const kg = W*p.mult, bar = kgToBar(kg, s), ma = moldArea(s);
+    steps.push({id:"press"+(i+1), phase:"Persen", title:`Persen ${i+1}/${s.press.length} — ${p.label}`,
+      targets:[["Perskracht",nf(kg,0)+" kg"],["Luchtdruk",nf(bar,1)+" bar"],["Tijd",fmtMin(p.min)]],
+      dose:[["Kracht op de kaas", nf(kg,0)+" kg", nf(p.mult,1)+"× het kaasgewicht ("+nf(W,1)+" kg)"+(ma? " · "+nf(kg*1000/ma,0)+" g/cm²":"")],
+            ["Manometer", nf(bar,2)+" bar", "boring "+s.boreMm+" mm"+(s.pressRatio!=1?" · overbrenging "+nf(s.pressRatio,2):"")+" · rendement "+Math.round(s.pressEff*100)+"%"]],
+      warn: !s.pressConfigured ? "Controleer je cilindermaten bij Instellingen → Pers, anders klopt de bar-waarde niet." : "",
+      body: i===0 ? `<ol class="steps"><li>Zet de vorm in de pers, stel de druk in op <b>${nf(bar,1)} bar</b>.</li><li>Begin licht: de buitenkant moet sluiten zonder dat het vocht binnenin wordt opgesloten.</li><li>Na de tijd: kaas uit de vorm, doek gladtrekken, kaas <b>keren</b> en terug in de vorm.</li></ol>`
+          : `<ol class="steps"><li>Verhoog de druk naar <b>${nf(bar,1)} bar</b>.</li><li>Na de tijd: kaas uit de vorm, doek opnieuw glad (natmaken in warme wei helpt), <b>keren</b> en terug.</li>${i===s.press.length-1?"<li>Na deze laatste stap gaat de kaas uit de pers.</li>":""}</ol>`,
+      timers:[{label:p.label, min:p.min, cal:p.min>=60}],
+      why: i===0 ? `Persen sluit de korst en geeft de kaas zijn vorm. Te zwaar beginnen sluit de buitenkant terwijl er binnenin nog wei zit, wat later een zure, natte kern geeft. Daarom stap voor stap opvoeren. Keren zorgt dat boven- en onderkant gelijk worden.` : `Door de druk geleidelijk te verhogen perst de wei gelijkmatig uit de hele kaas. De wrongel blijft intussen verzuren; aan het eind van het persen ligt de pH meestal rond 5,6–5,8.`,
+      attention:`<ul><li>Lekt er nauwelijks wei meer uit en is de korst glad? Dan gaat het goed.</li><li>Komt de doek met de korst mee bij het keren? Doek even in warme wei dompelen.</li></ul>`,
+      mistakes:`<ul><li>Vergeten te keren: geeft een scheve kaas met een dikke onderkant.</li><li>Te snel naar de hoogste druk.</li></ul>`,
+      inputs: i===s.press.length-1 ? [{k:"ph",label:"pH na persen",unit:"pH"}] : []
+    });
+  });
+
+  steps.push({id:"rest", phase:"Na het persen", title:"Uit de pers, wegen & laten verzuren",
+    targets:[["Doel-pH","5,3–5,5"],["Ruimte","18–21 °C"],["Duur","± 6–16 uur"]],
+    body:`<ol class="steps"><li>Haal de kaas uit de pers en de doek. Snijd eventuele flapjes van de naad af.</li><li><b>Weeg de kaas</b> en vul het gewicht in: de pekeltijd wordt daarop berekend.</li><li>Leg hem terug in de (lege) vorm of op een plank, bij 18–21 °C, afgedekt tegen uitdrogen.</li><li>Pekel pas als de pH op 5,3–5,5 is (vaak de volgende ochtend). Meet aan de zijkant met de steekelektrode.</li></ol>`,
+    timers:[{label:"Verzuren (controle)",min:480, cal:true}],
+    why:`In deze uren zet het zuursel de laatste lactose om. Pas als de kaas voldoende verzuurd is, neemt hij het zout goed op en krijgt hij de juiste structuur. Te vroeg pekelen stopt de verzuring: de kaas wordt rubberachtig en smaakt flauw.`,
+    attention:`<ul><li>Koeler dan 16 °C verzuurt de kaas te traag.</li><li>pH al onder 5,2? Dan was de verzuring te snel; noteer het.</li></ul>`,
+    mistakes:`<ul><li>De kaas onafgedekt laten liggen — de korst droogt en scheurt.</li></ul>`,
+    inputs:[{k:"weight",label:"Gewicht kaas",unit:"kg"},{k:"ph",label:"pH voor pekelen",unit:"pH"}]
+  });
+
+  const hours = Math.round(W * s.brineHPerKg);
+  const salt = brineSaltKg(s.brineL, s.brinePct);
+  steps.push({id:"brine", phase:"Pekelen", title:"Pekelen",
+    targets:[["Pekeltijd","± "+hours+" uur"],["Zout",s.brinePct+"%"],["Temp.","12–14 °C"],["pH pekel","5,2–5,4"]],
+    dose:[["Pekeltijd", hours+" uur", nf(W,1)+" kg × "+nf(s.brineHPerKg,1)+" u/kg — halverwege keren"],
+          ["Zout voor nieuwe pekel", nf(salt,1)+" kg", "op "+s.brineL+" L water → "+s.brinePct+"% (dichtheid ± "+nf(brineDensity(s.brinePct),3)+")"],
+          ["Calciumchloride 35% in pekel", nf(s.brineL*4,0)+" ml", "± 4 ml per liter, alleen bij een nieuwe pekel"]],
+    body:`<ol class="steps"><li>Pekel op 12–14 °C. Controleer het zoutgehalte met de pekelweger; bij een nieuwe pekel: zout oplossen, calciumchloride toevoegen en met een scheutje natuurazijn op pH 5,2–5,4 brengen.</li><li>Leg de kaas erin. Hij drijft: strooi een dun laagje zout op de bovenkant.</li><li>Keer de kaas halverwege en strooi opnieuw zout op de nieuwe bovenkant.</li><li>Na de pekeltijd: afspoelen is niet nodig, laten uitlekken en afdeppen.</li></ol>`,
+    timers:[{label:"Pekelen — keren",min:Math.round(hours*60/2), cal:true},{label:"Pekelen — eruit",min:Math.round(hours*60/2), cal:true}],
+    why:`Zout bepaalt smaak, remt ongewenste bacteriën en stuurt de rijping. Zonder calcium en met een te hoge pH lost de pekel calcium uit de korst op: de korst wordt dan slijmerig en zacht. Een koele pekel voorkomt dat de buitenkant te snel zout wordt terwijl de kern achterblijft.`,
+    attention:`<ul><li>Pekeltijd voor grote wielen is een richtwaarde: dikkere kazen hebben relatief iets langer nodig. Proef de eerste batches en stel de u/kg bij.</li><li>Zakt het zoutgehalte onder 18%? Bijvullen met zout.</li></ul>`,
+    mistakes:`<ul><li>Te warme pekel (kamertemperatuur): zachte korst, kans op gasvorming.</li><li>Vergeten te keren — de drijvende bovenkant krijgt dan te weinig zout.</li></ul>`,
+    inputs:[{k:"temp",label:"Temp. pekel",unit:"°C"},{k:"pct",label:"Zoutgehalte",unit:"%"},{k:"ph",label:"pH pekel",unit:"pH"}]
+  });
+
+  steps.push({id:"dry", phase:"Afronden", title:"Drogen & rijping starten",
+    targets:[["Drogen","1–3 dagen"],["Rijpen",s.ripenTempMin+"–"+s.ripenTempMax+" °C"],["RV","85–90%"]],
+    body:`<ol class="steps"><li>Zet de kaas op een schone houten plank in de rijpingsruimte.</li><li>Laat hem drogen tot de korst droog aanvoelt (1–3 dagen), dagelijks keren.</li><li>Kies hieronder het rijpingsdoel en druk op <b>Rijping starten</b>. De planner zet keren en coaten voor je klaar.</li></ol>`,
+    special:"finish",
+    why:`Coating hecht alleen op een droge korst. Coaten op een natte korst sluit vocht in: dan krijg je schimmel en loslatende coating.`,
+    attention:"", mistakes:"",
+    inputs:[]
+  });
+  return steps;
+}
+function tspTxt(t){ const q = Math.round(t*4)/4; const whole = Math.floor(q), frac = q-whole; const f = {0:"",0.25:"¼",0.5:"½",0.75:"¾"}[frac]; return (whole? whole+(f?" "+f:"") : (f||"¼"))+" theelepel"; }
+
+// ---------- Rijpingsplanner ----------
+function ripenPlan(b){
+  const start = startOfDay(b.ripenStart), weeks = b.targetWeeks || 12, days = weeks*7;
+  const plan = [];
+  const coat = {2:"Coaten laag 1 — bovenkant + zijkant",3:"Coaten laag 1 — onderkant + zijkant",5:"Coaten laag 2 — bovenkant",6:"Coaten laag 2 — onderkant",9:"Coaten laag 3 — bovenkant",10:"Coaten laag 3 — onderkant"};
+  const mile = {28:"Jong (4 wk) — eventueel proeven",56:"Jong belegen (8 wk)",84:"12 weken",112:"Belegen (16 wk)"};
+  for(let i=0;i<=days;i++){
+    const tasks = [];
+    if(i<=1) tasks.push("Drogen — keren, korst checken");
+    else if(i<=14) tasks.push("Keren");
+    else if(i<=28 && i%2===0) tasks.push("Keren");
+    else if(i<=56 && i%3===0) tasks.push("Keren");
+    else if(i>56 && i%7===0) tasks.push("Keren");
+    if(coat[i]) tasks.push(coat[i]);
+    if(i>0 && i%7===0) tasks.push("Wegen (vochtverlies)");
+    if(i>14 && i%14===0 && i<days) tasks.push("Coating controleren, bijwerken waar nodig");
+    if(mile[i] && i<days) tasks.push(mile[i]);
+    if(i===days) tasks.push("🎉 Rijpingsdoel bereikt — aansnijden!");
+    if(tasks.length) plan.push({day:i, date:start+i*DAY, tasks});
+  }
+  return plan;
+}
+
+// ---------- Timer / geluid / wake lock ----------
+let audioCtx = null, wakeLock = null, wakeWanted = false;
+function unlockAudio(){ try{ if(!audioCtx){ audioCtx = new (window.AudioContext||window.webkitAudioContext)(); } if(audioCtx.state==="suspended") audioCtx.resume(); }catch(e){} }
+function beep(){
+  try{ unlockAudio(); if(!audioCtx) return; const t0 = audioCtx.currentTime;
+    [0,0.35,0.7,1.4,1.75,2.1].forEach(dt=>{ const o=audioCtx.createOscillator(), g=audioCtx.createGain(); o.type="sine"; o.frequency.value=880; g.gain.setValueAtTime(0.0001,t0+dt); g.gain.exponentialRampToValueAtTime(0.4,t0+dt+0.02); g.gain.exponentialRampToValueAtTime(0.0001,t0+dt+0.28); o.connect(g).connect(audioCtx.destination); o.start(t0+dt); o.stop(t0+dt+0.3); });
+  }catch(e){}
+  try{ navigator.vibrate && navigator.vibrate([300,150,300,150,600]); }catch(e){}
+  showLocalNotification();
+}
+async function toggleWake(){
+  wakeWanted = !wakeWanted;
+  if(wakeWanted) await requestWake(); else { try{ wakeLock && await wakeLock.release(); }catch(e){} wakeLock=null; }
+  updateWakeBtn();
+}
+async function requestWake(){ try{ if("wakeLock" in navigator){ wakeLock = await navigator.wakeLock.request("screen"); wakeLock.addEventListener && wakeLock.addEventListener("release",()=>{wakeLock=null; updateWakeBtn();}); } else { toast("Scherm-aan wordt hier niet ondersteund"); wakeWanted=false; } }catch(e){ wakeWanted=false; toast("Scherm-aan lukt hier niet"); } }
+function updateWakeBtn(){ const b=$("#wakeBtn"); if(!b) return; b.hidden = !activeBatch(); b.classList.toggle("on", !!wakeLock); b.textContent = wakeLock ? "Scherm blijft aan" : "Scherm aan"; }
+document.addEventListener("visibilitychange", ()=>{ if(document.visibilityState==="visible"){ if(wakeWanted && !wakeLock) requestWake().then(updateWakeBtn); tick(); } });
+
+function showLocalNotification(){
+  try{
+    if(IS_ARTIFACT || !("Notification" in window) || Notification.permission!=="granted") return;
+    const b = activeBatch(); const label = b&&b.timer ? b.timer.label : "Timer";
+    if(navigator.serviceWorker && navigator.serviceWorker.controller){
+      navigator.serviceWorker.ready.then(r=>r.showNotification("Goudse Kaas — "+label+" klaar",{body:"Tijd voor de volgende handeling.",tag:"kaas-timer"}));
+    }
+  }catch(e){}
+}
+
+function activeBatch(){ const id=S.settings.activeId; return id && S.batches[id] && S.batches[id].status==="maken" ? S.batches[id] : null; }
+function startTimer(b, stepId, idx, label, min){
+  unlockAudio();
+  b.timer = {stepId, idx, label, startAt:Date.now(), endAt:Date.now()+min*60000, alerted:false};
+  logEvent(b, "Timer gestart: "+label+" ("+fmtMin(min)+")");
+  saveBatch(b); render();
+  try{ if(!IS_ARTIFACT && "Notification" in window && Notification.permission==="default") Notification.requestPermission(); }catch(e){}
+}
+function stopTimer(b, finished){
+  if(!b.timer) return;
+  const t=b.timer; b.steps[t.stepId]=b.steps[t.stepId]||{}; b.steps[t.stepId].timersDone=b.steps[t.stepId].timersDone||{};
+  if(finished) b.steps[t.stepId].timersDone[t.idx]=true;
+  logEvent(b, (finished?"Timer klaar: ":"Timer gestopt: ")+t.label);
+  b.timer=null; saveBatch(b); render();
+}
+function tick(){
+  const b = activeBatch(), bar = $("#timerbar");
+  if(!b || !b.timer){ if(bar.innerHTML) bar.innerHTML=""; }
+  else {
+    const left = b.timer.endAt - Date.now(), done = left<=0;
+    if(done && !b.timer.alerted){ b.timer.alerted=true; saveBatch(b); beep(); }
+    const html = `<div class="timerbar ${done?"done":""}" data-act="gotoTimerStep"><div class="lbl">${done?"✓ Klaar: ":"⏱ "}${esc(b.timer.label)}</div><div class="t">${done?"+"+fmtDur(-left):fmtDur(left)}</div>${done?`<button class="btn sm" data-act="timerDone">OK</button>`:""}</div>`;
+    if(bar.innerHTML!==html) bar.innerHTML = html;
+  }
+  document.querySelectorAll("[data-count]").forEach(el=>{
+    const end = +el.dataset.count, left = end-Date.now();
+    el.textContent = left>0 ? fmtDur(left) : "klaar";
+  });
+  document.querySelectorAll("[data-since]").forEach(el=>{ el.textContent = fmtDur(Date.now()-(+el.dataset.since)); });
+}
+setInterval(tick, 1000);
+
+function logEvent(b, text){ b.log = b.log||[]; b.log.push({t:Date.now(), text}); }
+
+// ---------- Agenda (.ics) ----------
+function icsDate(ts){ const d=new Date(ts); return d.getUTCFullYear()+pad(d.getUTCMonth()+1)+pad(d.getUTCDate())+"T"+pad(d.getUTCHours())+pad(d.getUTCMinutes())+"00Z"; }
+function icsEsc(s){ return String(s).replace(/\\/g,"\\\\").replace(/;/g,"\\;").replace(/,/g,"\\,").replace(/\n/g,"\\n"); }
+function makeIcs(events){
+  const L=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Mulder//Goudse Kaas//NL","CALSCALE:GREGORIAN","METHOD:PUBLISH"];
+  events.forEach((e,i)=>{ L.push("BEGIN:VEVENT","UID:"+uid()+i+"@goudse-kaas","DTSTAMP:"+icsDate(Date.now()),"DTSTART:"+icsDate(e.start),"DTEND:"+icsDate(e.end||e.start+15*60000),"SUMMARY:"+icsEsc(e.title),"DESCRIPTION:"+icsEsc(e.desc||""),"BEGIN:VALARM","ACTION:DISPLAY","DESCRIPTION:"+icsEsc(e.title),"TRIGGER:PT0M","END:VALARM","END:VEVENT"); });
+  L.push("END:VCALENDAR"); return L.join("\r\n");
+}
+async function saveFile(filename, text, mime){
+  if(IS_ARTIFACT){
+    try{ const dl = await claude.use("downloads"); if(!dl){ toast("Downloaden is hier niet beschikbaar"); return false; }
+      await dl.save({filename, data:text}); return true;
+    }catch(e){ if(e&&e.code!=="declined") toast("Opslaan lukte niet ("+(e.code||"fout")+")"); return false; }
+  }
+  try{ const blob = new Blob([text],{type:mime}); const url = URL.createObjectURL(blob); const a=document.createElement("a"); a.href=url; a.download=filename; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url), 4000); return true; }catch(e){ toast("Opslaan lukte niet"); return false; }
+}
+function calAvailable(){ return !IS_ARTIFACT; }
+
+// ---------- Weergave ----------
+let tab = "maken", openBatchId = null, showStepList = false, calcL = null, pendingRender = false;
+const TABS = [
+  ["maken","Maken",'<path d="M4 15h16l-2 5H6z"/><path d="M8 11c0-2 1.5-3 4-3s4 1 4 3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3v3" stroke="currentColor" stroke-width="2"/>'],
+  ["calc","Rekenen",'<rect x="5" y="3" width="14" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 7h8M8 12h2M14 12h2M8 16h2M14 16h2" stroke="currentColor" stroke-width="2"/>'],
+  ["log","Logboek",'<path d="M6 3h11a2 2 0 0 1 2 2v16H8a2 2 0 0 1-2-2z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 8h6M10 12h6" stroke="currentColor" stroke-width="2"/>'],
+  ["rijp","Rijping",'<path d="M3 17 12 6l9 11z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="10" cy="14" r="1.4"/><circle cx="14" cy="12" r="1"/>'],
+  ["meer","Instellingen",'<circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2" stroke="currentColor" stroke-width="2"/>']
+];
+function renderTabs(){
+  $("#tabs").innerHTML = TABS.map(([k,l,svg])=>`<button class="${tab===k?"on":""}" data-act="tab" data-tab="${k}"><svg viewBox="0 0 24 24" fill="currentColor">${svg}</svg>${l}</button>`).join("");
+}
+function softRender(){ const a=document.activeElement; if(a && (a.tagName==="INPUT"||a.tagName==="TEXTAREA"||a.tagName==="SELECT")){ pendingRender=true; return; } render(); }
+document.addEventListener("focusout", ()=>{ if(pendingRender){ setTimeout(()=>{ const a=document.activeElement; if(!(a&&(a.tagName==="INPUT"||a.tagName==="TEXTAREA"))){ pendingRender=false; render(); } }, 50); } });
+
+function render(){
+  renderTabs(); updateWakeBtn();
+  const v = $("#view");
+  if(tab==="maken") v.innerHTML = viewMaken();
+  else if(tab==="calc") v.innerHTML = viewCalc();
+  else if(tab==="log") v.innerHTML = openBatchId && S.batches[openBatchId] ? viewBatchDetail(S.batches[openBatchId]) : viewLog();
+  else if(tab==="rijp") v.innerHTML = viewRijping();
+  else v.innerHTML = viewSettings();
+  tick();
+}
+
+function fieldHtml(label, val, attrs, unit, type){
+  return `<div class="field"><label>${label}</label><div class="inp"><input ${type==="text"?'type="text"':'type="text" inputmode="decimal"'} value="${esc(val??"")}" ${attrs}>${unit?`<span class="u">${unit}</span>`:""}</div></div>`;
+}
+
+// ----- Maken -----
+function viewMaken(){
+  const b = activeBatch();
+  if(!b) return viewStart();
+  const steps = buildSteps(b);
+  b.stepIdx = Math.min(b.stepIdx||0, steps.length-1);
+  if(showStepList) return viewStepList(b, steps);
+  const st = steps[b.stepIdx], rec = (b.steps[st.id] = b.steps[st.id]||{});
+  const pct = Math.round(b.stepIdx/(steps.length-1)*100);
+  let h = `<div class="spread small muted"><span>${esc(b.name)} · ${nf(b.liters,0)} L</span><button class="btn sm ghost" data-act="stepList">Alle stappen</button></div>
+    <div class="progress"><i style="width:${pct}%"></i></div>
+    <div class="card">
+      <div class="spread"><span class="chip gold">${esc(st.phase)}</span><span class="small muted">Stap ${b.stepIdx+1} / ${steps.length}${rec.doneAt?` · <span style="color:var(--whey)">✓ ${fmtTime(rec.doneAt)}</span>`:""}</span></div>
+      <h2 style="margin-top:10px">${esc(st.title)}</h2>
+      ${st.targets? `<div class="targets">${st.targets.map(([k,val])=>`<div class="target"><span>${k}</span><b>${val}</b></div>`).join("")}</div>`:""}
+      ${st.warn? `<div class="note warn">${st.warn}</div>`:""}
+      ${st.dose? `<div class="dose">${st.dose.map(([l,val,s])=>`<div class="d"><div><b>${l}</b>${s?`<span class="s">${s}</span>`:""}</div><div class="v">${val}</div></div>`).join("")}</div>`:""}
+      ${st.body||""}
+      ${special(st, b)}
+      ${st.timers? timersHtml(st, b, rec):""}
+      ${st.inputs&&st.inputs.length? `<h3>Meten & noteren</h3><div class="grid2">${st.inputs.map(inp=>fieldHtml(inp.label, rec.values&&rec.values[inp.k], `data-field="step" data-step="${st.id}" data-k="${inp.k}"`, inp.unit, inp.type)).join("")}</div>`:""}
+      <details><summary>Waarom deze stap?</summary><p>${st.why}</p></details>
+      ${st.attention? `<details><summary>Waar let je op?</summary>${st.attention}</details>`:""}
+      ${st.mistakes? `<details><summary>Veelgemaakte fouten</summary>${st.mistakes}</details>`:""}
+      <div class="field" style="margin-top:12px"><label>Notitie bij deze stap</label><textarea data-field="stepnote" data-step="${st.id}" placeholder="Bijzonderheden, afwijkingen…">${esc(rec.note||"")}</textarea></div>
+    </div>
+    <div class="nav">
+      <button class="btn" data-act="prev" ${b.stepIdx===0?"disabled":""}>← Vorige</button>
+      ${st.special==="finish"? "" : `<button class="btn primary" data-act="next">${rec.doneAt?"Volgende →":"Klaar, volgende →"}</button>`}
+    </div>`;
+  return h;
+}
+function timersHtml(st, b, rec){
+  const done = rec.timersDone||{};
+  return `<div class="timers">${st.timers.map((t,i)=>{
+    const running = b.timer && b.timer.stepId===st.id && b.timer.idx===i;
+    const fin = done[i] && !running;
+    return `<div class="tmr ${running?"run":""} ${fin?"fin":""}"><div class="n"><b>${esc(t.label)}</b><span class="small muted">${fmtMin(t.min)}${running?` · klaar om ${fmtTime(b.timer.endAt)}`:""}</span></div>
+      ${running? `<span class="clock" data-count="${b.timer.endAt}"></span><button class="btn sm" data-act="stopTimer">Stop</button>`
+               : `<button class="btn sm ${fin?"":"gold"}" data-act="startTimer" data-step="${st.id}" data-idx="${i}">${fin?"↻ Opnieuw":"▶ Start"}</button>`}
+      ${running && t.cal && calAvailable()? `<button class="btn sm ghost" data-act="calTimer" title="In agenda">📅</button>`:""}
+    </div>`;}).join("")}</div>
+    ${b.timer && b.timer.stepId!==st.id ? `<p class="small muted">Er loopt al een timer (${esc(b.timer.label)}). Een nieuwe starten vervangt die.</p>`:""}
+    ${st.timers.some(t=>t.cal) && !calAvailable()? `<p class="small muted">Tip: lange wachttijden kun je in de geïnstalleerde versie direct in je iPhone-agenda zetten.</p>`:""}`;
+}
+function special(st, b){
+  const s=b.s, d=doses(b.liters, s);
+  if(st.special==="rennetStart"){
+    return b.rennetAt ? `<div class="note">Stremsel toegevoegd om <b>${fmtTime(b.rennetAt)}</b> — <span data-since="${b.rennetAt}"></span> geleden.</div><button class="btn sm ghost" data-act="rennetReset">Tijdstip opnieuw zetten</button>`
+      : `<button class="btn gold block" data-act="rennetNow" style="margin-top:8px">Stremsel erin — start klok</button>`;
+  }
+  if(st.special==="floc"){
+    if(!b.rennetAt) return `<div class="note warn">De klok loopt nog niet. Zit het stremsel er al in?</div><button class="btn gold block" data-act="rennetNow">Stremsel zit erin — start klok nu</button>`;
+    if(!b.flocAt) return `<div class="note">Sinds stremsel: <b data-since="${b.rennetAt}"></b></div><button class="btn gold block" data-act="flocNow">Vlokpunt nu</button>`;
+    const flocMin = (b.flocAt-b.rennetAt)/60000, cutAt = b.rennetAt + (b.flocAt-b.rennetAt)*s.flocMult;
+    const flag = flocMin<8 ? `<span class="chip red">snel</span>` : flocMin>18 ? `<span class="chip red">traag</span>` : `<span class="chip green">normaal</span>`;
+    return `<div class="dose"><div class="d"><div><b>Vlokpunt</b><span class="s">na stremsel</span></div><div class="v">${nf(flocMin,1)} min ${flag}</div></div>
+      <div class="d"><div><b>Snijden om</b><span class="s">${nf(flocMin,1)} × ${nf(s.flocMult,1)} = ${nf(flocMin*s.flocMult,0)} min na stremsel</span></div><div class="v">${fmtTime(cutAt)}</div></div>
+      <div class="d"><div><b>Nog</b></div><div class="v" data-count="${cutAt}"></div></div></div>
+      <div class="row"><button class="btn sm gold" data-act="flocTimer">Timer tot snijmoment</button><button class="btn sm ghost" data-act="flocReset">Vlokpunt opnieuw</button></div>`;
+  }
+  if(st.special==="wash1" || st.special==="wash2"){
+    const first = st.special==="wash1";
+    const prevVol = first ? b.liters : (b.liters - (stepVal(b,"whey1","vol")||d.whey1) + (stepVal(b,"wash1","water")||0));
+    const removed = first ? (stepVal(b,"whey1","vol")||d.whey1) : (stepVal(b,"whey2","vol")||d.whey2);
+    const vol = Math.max(0, prevVol - removed);
+    const tNow = first ? (stepVal(b,"rennet","temp")||30.5) : (stepVal(b,"wash1","temp")||33);
+    const tT = first ? 33 : 36;
+    const w = mixWater(vol, tNow, tT, s.washWaterTemp);
+    return `<div class="dose"><div class="d"><div><b>Waswater van ${s.washWaterTemp} °C</b><span class="s">± ${nf(vol,0)} L in de ketel op ${nf(tNow,1)} °C → ${tT} °C. Richtwaarde: ketel en lucht koelen mee, houd 10–20% extra klaar.</span></div><div class="v">± ${nf(w,1)} L</div></div></div>`;
+  }
+  if(st.special==="finish"){
+    const tw = b.targetWeeks || S.settings.targetWeeks;
+    return `<h3>Rijpingsdoel</h3><div class="seg">${[[4,"Jong"],[8,"Jong bel."],[12,"12 wk"],[16,"Belegen"]].map(([w,l])=>`<button class="${tw===w?"on":""}" data-act="setTarget" data-w="${w}">${l}<br><span class="small muted">${w} wk</span></button>`).join("")}</div>
+      <button class="btn green block" style="margin-top:12px" data-act="startRipening">Rijping starten</button>
+      <p class="small muted">De batch verhuist naar het tabblad Rijping. Vandaag telt als dag 0.</p>`;
+  }
+  return "";
+}
+function viewStepList(b, steps){
+  return `<div class="card"><div class="spread"><h2>Alle stappen</h2><button class="btn sm" data-act="stepList">Sluiten</button></div>
+    <div class="steplist">${steps.map((st,i)=>{ const r=b.steps[st.id]||{}; return `<div class="si ${r.doneAt?"done":""} ${i===b.stepIdx?"cur":""}" data-act="gotoStep" data-i="${i}"><span class="num">${r.doneAt?"✓":i+1}</span><div class="grow"><b>${esc(st.title)}</b><div class="small muted">${esc(st.phase)}${r.doneAt?" · "+fmtTime(r.doneAt):""}</div></div></div>`; }).join("")}</div>
+    <h3>Batch</h3><div class="row"><button class="btn sm ghost" data-act="pauseBatch">Pauzeren (later verder)</button><button class="btn sm danger" data-act="abortBatch">Batch annuleren</button></div></div>`;
+}
+function viewStart(){
+  const s=S.settings, L = s.liters, d=doses(L, s);
+  const paused = Object.values(S.batches).filter(b=>b.status==="maken").sort((a,b)=>b.createdAt-a.createdAt);
+  return `<div class="card hero"><h2>Nieuwe kaas maken</h2><p class="muted">Goudse kaas van rauwe melk · CHN-19 · Naturen 145</p>
+    ${fieldHtml("Hoeveel liter melk?", L, 'data-field="setting" data-k="liters"', "L")}
+    <button class="btn gold block" data-act="newBatch" style="margin-top:6px">Start batch #${nextBatchNr()}</button></div>
+    ${paused.length? `<div class="card"><h3 style="margin-top:0">Gepauzeerde batch</h3>${paused.map(b=>`<div class="list-item" data-act="resume" data-id="${b.id}"><div class="wheel">${b.nr}</div><div class="grow"><b>${esc(b.name)}</b><div class="small muted">${fmtDate(b.createdAt)} · stap ${(b.stepIdx||0)+1}</div></div><span class="chip">Verder →</span></div>`).join("")}</div>`:""}
+    <div class="card"><h3 style="margin-top:0">Je hebt nodig voor ${nf(L,0)} L</h3>
+      <div class="dose">
+        <div class="d"><div><b>CHN-19</b><span class="s">${d.chnG!=null? nf(d.chnU,1)+" U":"of "+tspTxt(d.chnTsp)}</span></div><div class="v">${d.chnG!=null? nf(d.chnG,2)+" g": nf(d.chnU,1)+" U"}</div></div>
+        <div class="d"><div><b>Salpeter 35%</b></div><div class="v">${s.salpeterOn? nf(d.salpeterMl,1)+" ml":"–"}</div></div>
+        ${s.cacl2On? `<div class="d"><div><b>Calciumchloride 35%</b></div><div class="v">${nf(d.cacl2Ml,1)} ml</div></div>`:""}
+        <div class="d"><div><b>Naturen 145 stremsel</b><span class="s">${s.imcuPerL} IMCU/L</span></div><div class="v">${nf(d.rennetMl,1)} ml</div></div>
+        <div class="d"><div><b>Verwachte kaas</b><span class="s">bij ${s.litersPerKg} L/kg</span></div><div class="v">± ${nf(d.kg,1)} kg</div></div>
+      </div>
+      <p class="small muted">Totale bereidingstijd op de dag: ± 3 uur actief + ${fmtMin(s.press.reduce((a,p)=>a+p.min,0))} persen, daarna verzuren tot de volgende ochtend en pekelen.</p>
+    </div>
+    ${s.pressConfigured? "": `<div class="note warn">Vul bij <b>Instellingen → Pers</b> de boring van je luchtcilinder in, dan kloppen de bar-waarden in het persschema.</div>`}`;
+}
+function nextBatchNr(){ return Object.values(S.batches).reduce((m,b)=>Math.max(m,b.nr||0),0)+1; }
+
+// ----- Rekenen -----
+function viewCalc(){
+  const s=S.settings, L = calcL ?? s.liters, d=doses(L, s);
+  const W=d.kg;
+  return `<div class="card"><h2>Doseringen</h2>
+    ${fieldHtml("Melk", L, 'data-field="calcL"', "L")}
+    <table class="t"><tr><th>Ingrediënt</th><th class="r">Hoeveelheid</th></tr>
+      <tr><td>CHN-19 (10U/100 L)</td><td class="r"><b>${d.chnG!=null? nf(d.chnG,2)+" g · ":""}${nf(d.chnU,1)} U</b><br><span class="small muted">${tspTxt(d.chnTsp)}</span></td></tr>
+      <tr><td>Salpeter 35% (0,05 ml/L)</td><td class="r"><b>${nf(L*s.salpeterMlPerL,1)} ml</b></td></tr>
+      <tr><td>Calciumchloride 35% (${nf(s.cacl2MlPerL,2)} ml/L)</td><td class="r"><b>${nf(L*s.cacl2MlPerL,1)} ml</b><br><span class="small muted">${s.cacl2On?"staat aan":"staat uit (rauwe melk)"}</span></td></tr>
+      <tr><td>Naturen 145 (${s.imcuPerL} IMCU/L)</td><td class="r"><b>${nf(d.rennetMl,1)} ml</b><br><span class="small muted">30 IMCU: ${nf(L*30/145,1)} · 60 IMCU: ${nf(L*60/145,1)} ml</span></td></tr>
+      <tr><td>Eerste / tweede wei aftappen</td><td class="r"><b>${nf(d.whey1,0)} / ${nf(d.whey2,0)} L</b></td></tr>
+      <tr><td>Verwachte kaas</td><td class="r"><b>± ${nf(W,1)} kg</b></td></tr>
+    </table></div>
+
+    <div class="card"><h2>Waswater</h2><p class="small muted">Hoeveel water van een bepaalde temperatuur heb je nodig om de wrongel+wei op doeltemperatuur te krijgen?</p>
+      <div class="grid2">
+        ${fieldHtml("Volume in ketel", s._wvol??40, 'data-field="calc" data-k="_wvol"', "L")}
+        ${fieldHtml("Nu", s._wnow??31, 'data-field="calc" data-k="_wnow"', "°C")}
+        ${fieldHtml("Doel", s._wtgt??33, 'data-field="calc" data-k="_wtgt"', "°C")}
+        ${fieldHtml("Waswater", s._wwat??s.washWaterTemp, 'data-field="calc" data-k="_wwat"', "°C")}
+      </div>
+      <div class="dose"><div class="d"><div><b>Toe te voegen</b></div><div class="v">${nf(mixWater(s._wvol??40, s._wnow??31, s._wtgt??33, s._wwat??s.washWaterTemp),1)} L</div></div></div></div>
+
+    <div class="card"><h2>Pers: kg ⇄ bar</h2><p class="small muted">Boring ${s.boreMm} mm · cilinderoppervlak ${nf(cylAreaCm2(s),1)} cm² · overbrenging ${nf(s.pressRatio,2)} · rendement ${Math.round(s.pressEff*100)}%</p>
+      <div class="grid2">${fieldHtml("Kracht op kaas", s._pkg??40, 'data-field="calc" data-k="_pkg"', "kg")}${fieldHtml("Druk", s._pbar??"", 'data-field="calc" data-k="_pbar"', "bar")}</div>
+      <div class="dose"><div class="d"><div><b>${nf(s._pkg??40,0)} kg</b></div><div class="v">${nf(kgToBar(s._pkg??40, s),2)} bar</div></div>
+      ${s._pbar? `<div class="d"><div><b>${nf(s._pbar,2)} bar</b></div><div class="v">${nf(barToKg(s._pbar, s),0)} kg</div></div>`:""}</div>
+      <table class="t"><tr><th>Persstap</th><th class="r">kg</th><th class="r">bar</th><th class="r">tijd</th></tr>
+      ${s.press.map(p=>`<tr><td>${esc(p.label)} (${nf(p.mult,1)}×)</td><td class="r">${nf(W*p.mult,0)}</td><td class="r">${nf(kgToBar(W*p.mult,s),1)}</td><td class="r">${fmtMin(p.min)}</td></tr>`).join("")}
+      </table><p class="small muted">Voor een kaas van ± ${nf(W,1)} kg (${nf(L,0)} L melk).</p></div>
+
+    <div class="card"><h2>Pekel</h2>
+      <div class="grid2">${fieldHtml("Water", s.brineL, 'data-field="setting" data-k="brineL"', "L")}${fieldHtml("Zoutgehalte", s.brinePct, 'data-field="setting" data-k="brinePct"', "%")}</div>
+      <div class="dose"><div class="d"><div><b>Zout</b><span class="s">zuiver keukenzout zonder jodium</span></div><div class="v">${nf(brineSaltKg(s.brineL,s.brinePct),2)} kg</div></div>
+      <div class="d"><div><b>Calciumchloride 35%</b><span class="s">nieuwe pekel</span></div><div class="v">${nf(s.brineL*4,0)} ml</div></div>
+      <div class="d"><div><b>Dichtheid (pekelweger)</b></div><div class="v">± ${nf(brineDensity(s.brinePct),3)}</div></div>
+      <div class="d"><div><b>Pekeltijd kaas ${nf(W,1)} kg</b><span class="s">${nf(s.brineHPerKg,1)} u/kg</span></div><div class="v">${Math.round(W*s.brineHPerKg)} uur</div></div></div></div>`;
+}
+
+// ----- Logboek -----
+function batchStatus(b){ return b.status==="maken" ? `<span class="chip gold">Maken</span>` : b.status==="rijpt" ? `<span class="chip green">Rijpt · ${ripeWeek(b)} wk</span>` : b.status==="klaar" ? `<span class="chip">Klaar</span>` : `<span class="chip red">Geannuleerd</span>`; }
+function ripeWeek(b){ return Math.max(0, Math.floor((startOfDay(Date.now())-startOfDay(b.ripenStart))/DAY/7)); }
+function viewLog(){
+  const list = Object.values(S.batches).sort((a,b)=>b.createdAt-a.createdAt);
+  return `<div class="card"><h2>Logboek</h2>${list.length? list.map(b=>`<div class="list-item" data-act="openBatch" data-id="${b.id}"><div class="wheel">${b.nr}</div><div class="grow"><b>${esc(b.name)}</b><div class="small muted">${fmtDate(b.createdAt)} · ${nf(b.liters,0)} L${stepVal(b,"rest","weight")? " · "+nf(stepVal(b,"rest","weight"),2)+" kg":""}${b.rating? " · "+"★".repeat(b.rating):""}</div></div>${batchStatus(b)}</div>`).join("") : `<p class="muted">Nog geen batches. Start je eerste kaas bij <b>Maken</b>.</p>`}</div>
+    <div class="card"><h3 style="margin-top:0">Back-up</h3><p class="small muted">Bewaar af en toe een back-up van al je batches.</p><div class="row"><button class="btn sm" data-act="exportJson">Exporteren (.json)</button><button class="btn sm ghost" data-act="importJson">Importeren</button></div></div>`;
+}
+function viewBatchDetail(b){
+  const steps = buildSteps(b);
+  const rows = steps.map(st=>{ const r=b.steps[st.id]; if(!r) return ""; const vals = r.values? Object.entries(r.values).filter(([k,v])=>v!==""&&v!=null).map(([k,v])=>{ const inp=(st.inputs||[]).find(i=>i.k===k); return `${inp?inp.label:k}: <b>${esc(v)}${inp&&inp.unit?" "+inp.unit:""}</b>`; }).join("<br>") : ""; if(!r.doneAt && !vals && !r.note) return ""; return `<tr><td><b>${esc(st.title)}</b>${vals?`<div class="small">${vals}</div>`:""}${r.note?`<div class="small muted">“${esc(r.note)}”</div>`:""}</td><td class="r small">${r.doneAt?fmtTime(r.doneAt):""}</td></tr>`; }).join("");
+  const d = doses(b.liters, b.s);
+  const flocMin = b.flocAt&&b.rennetAt ? (b.flocAt-b.rennetAt)/60000 : null;
+  const weights = (b.weights||[]).slice().sort((a,c)=>a.t-c.t);
+  return `<button class="btn sm ghost" data-act="closeBatch" style="margin-bottom:10px">← Logboek</button>
+  <div class="card"><div class="spread"><h2>${esc(b.name)}</h2>${batchStatus(b)}</div>
+    <dl class="kv" style="margin-top:10px"><dt>Gemaakt</dt><dd>${fmtDate(b.createdAt,{weekday:"short",day:"numeric",month:"long",year:"numeric"})}</dd>
+    <dt>Melk</dt><dd>${nf(b.liters,0)} L</dd>
+    <dt>CHN-19</dt><dd>${d.chnG!=null? nf(d.chnG,2)+" g · ":""}${nf(d.chnU,1)} U</dd>
+    <dt>Stremsel</dt><dd>${nf(d.rennetMl,1)} ml (${b.s.imcuPerL} IMCU/L)</dd>
+    <dt>Salpeter / CaCl₂</dt><dd>${b.s.salpeterOn? nf(d.salpeterMl,1)+" ml":"–"} / ${b.s.cacl2On? nf(d.cacl2Ml,1)+" ml":"–"}</dd>
+    ${flocMin? `<dt>Vlokpunt</dt><dd>${nf(flocMin,1)} min → snijden na ${nf(flocMin*b.s.flocMult,0)} min</dd>`:""}
+    ${stepVal(b,"rest","weight")? `<dt>Gewicht na pers</dt><dd>${nf(stepVal(b,"rest","weight"),2)} kg (opbrengst ${nf(b.liters/stepVal(b,"rest","weight"),1)} L/kg)</dd>`:""}
+    ${b.ripenStart? `<dt>Rijping sinds</dt><dd>${fmtDate(b.ripenStart)} · doel ${b.targetWeeks} wk</dd>`:""}</dl>
+    <h3>Beoordeling</h3><div class="stars">${[1,2,3,4,5].map(n=>`<button class="${(b.rating||0)>=n?"on":""}" data-act="rate" data-n="${n}">★</button>`).join("")}</div>
+    <div class="field"><label>Proefnotities / conclusies</label><textarea data-field="batchnote" placeholder="Smaak, structuur, wat volgende keer anders…">${esc(b.note||"")}</textarea></div>
+  </div>
+  ${rows? `<div class="card"><h3 style="margin-top:0">Metingen per stap</h3><table class="t">${rows}</table></div>`:""}
+  ${weights.length? `<div class="card"><h3 style="margin-top:0">Gewicht tijdens rijping</h3><table class="t">${weights.map(w=>`<tr><td>${fmtDate(w.t)}</td><td class="r"><b>${nf(w.kg,2)} kg</b></td><td class="r small muted">${stepVal(b,"rest","weight")? "−"+nf((1-w.kg/stepVal(b,"rest","weight"))*100,1)+"%":""}</td></tr>`).join("")}</table></div>`:""}
+  ${b.log&&b.log.length? `<div class="card"><details><summary>Tijdlijn (${b.log.length})</summary><table class="t">${b.log.map(e=>`<tr><td class="small">${esc(e.text)}</td><td class="r small muted">${fmtDate(e.t,{day:"numeric",month:"short"})} ${fmtTime(e.t)}</td></tr>`).join("")}</table></details></div>`:""}
+  <div class="row">${b.status==="rijpt"? `<button class="btn sm" data-act="markDone" data-id="${b.id}">Markeer als klaar/aangesneden</button>`:""}${b.status==="maken"? `<button class="btn sm gold" data-act="resume" data-id="${b.id}">Verder maken</button>`:""}<button class="btn sm danger" data-act="askDelete" data-id="${b.id}">Verwijderen</button></div>`;
+}
+
+// ----- Rijping -----
+function viewRijping(){
+  const list = Object.values(S.batches).filter(b=>b.status==="rijpt").sort((a,b)=>a.ripenStart-b.ripenStart);
+  if(!list.length) return `<div class="card"><h2>Rijping</h2><p class="muted">Nog geen kazen aan het rijpen. Na het pekelen en drogen start je de rijping in de laatste stap van <b>Maken</b>.</p>
+    <div class="note"><b>Rijpingsruimte:</b> ${S.settings.ripenTempMin}–${S.settings.ripenTempMax} °C en 85–90% relatieve luchtvochtigheid. Houten planken, regelmatig schoonmaken, geen tocht.</div></div>`;
+  const today = startOfDay(Date.now());
+  return list.map(b=>{
+    const plan = ripenPlan(b), days=(b.targetWeeks||12)*7, dayNr = Math.round((today-startOfDay(b.ripenStart))/DAY);
+    const done = b.ripeDone||{};
+    const overdue = plan.filter(p=>p.date<today && p.tasks.some(t=>!done[dayKey(p.date)+"|"+t]));
+    const upcoming = plan.filter(p=>p.date>=today && p.date<today+8*DAY);
+    const block = p => `<div class="daylbl">${p.date===today?"Vandaag":fmtDate(p.date,{weekday:"long",day:"numeric",month:"short"})} · dag ${p.day}</div>${p.tasks.map(t=>{ const k=dayKey(p.date)+"|"+t, on=!!done[k]; return `<div class="task"><button class="check ${on?"on":""}" data-act="ripeTask" data-id="${b.id}" data-k="${esc(k)}">${on?"✓":""}</button><div class="grow">${esc(t)}${/Coaten laag 1/.test(t)?`<div class="small muted">Dun aanbrengen met spons of kwast, 4–8 uur laten drogen voor je keert.</div>`:""}</div></div>`; }).join("")}`;
+    return `<div class="card"><div class="spread"><div class="row"><div class="wheel">${b.nr}</div><div><h2 style="font-size:19px">${esc(b.name)}</h2><div class="small muted">dag ${dayNr} van ${days} · doel ${b.targetWeeks} wk</div></div></div></div>
+      <div class="progress"><i style="width:${Math.min(100,dayNr/days*100)}%"></i></div>
+      ${overdue.length? `<details open><summary style="color:var(--red)">Achterstallig (${overdue.length} dagen)</summary>${overdue.slice(-5).map(block).join("")}${overdue.length>1?`<button class="btn sm ghost" style="margin-top:8px" data-act="ripeCatchup" data-id="${b.id}">Alles achterstallig afvinken</button>`:""}</details>`:""}
+      ${upcoming.length? upcoming.map(block).join("") : `<p class="muted">Geen taken deze week.</p>`}
+      <h3>Gewicht loggen</h3><div class="row"><div class="inp" style="flex:1"><input type="text" inputmode="decimal" placeholder="kg" id="w_${b.id}"><span class="u">kg</span></div><button class="btn sm gold" data-act="addWeight" data-id="${b.id}">Opslaan</button></div>
+      <div class="row" style="margin-top:12px">${calAvailable()? `<button class="btn sm" data-act="calRipen" data-id="${b.id}">📅 Planning in agenda</button>`:""}<button class="btn sm ghost" data-act="openBatchFromRipe" data-id="${b.id}">Batchdetails</button></div>
+    </div>`;
+  }).join("") + `<div class="note"><b>Rijpingsruimte:</b> ${S.settings.ripenTempMin}–${S.settings.ripenTempMax} °C, 85–90% RV. Keren voorkomt een platte onderkant en vochtophoping onder de kaas; coating beschermt tegen uitdrogen en schimmel.</div>`;
+}
+
+// ----- Instellingen -----
+function setRow(label, k, unit, help){ return `${fieldHtml(label, S.settings[k], `data-field="setting" data-k="${k}"`, unit)}${help?`<div class="small muted" style="margin:-4px 0 6px">${help}</div>`:""}`; }
+function toggleRow(label, k, help){ const on=S.settings[k]; return `<div class="spread" style="padding:8px 0"><div><b>${label}</b>${help?`<div class="small muted">${help}</div>`:""}</div><button class="btn sm ${on?"green":""}" data-act="toggle" data-k="${k}">${on?"Aan":"Uit"}</button></div>`; }
+function viewSettings(){
+  const s=S.settings;
+  return `<div class="card"><h2>Zuursel & stremsel</h2>
+    ${setRow("CHN-19 dosering","chnUPer100","U / 100 L","Chr. Hansen: 50U per 500 L = 10U per 100 L.")}
+    ${setRow("Inhoud 50U-zakje","chnBagGram","g","Weeg eenmalig de volledige inhoud van een zakje met je precisieweegschaal; daarna rekent de app in grammen. 0 = onbekend.")}
+    ${setRow("Voorverzuren","preRipenMin","min")}
+    ${setRow("Stremsel","imcuPerL","IMCU/L","Fabrikant: 30–60 IMCU/L. Start op 40; sneller stremmen → hoger, bittere kaas → lager.")}
+    ${setRow("Stremselsterkte","rennetImcu","IMCU/ml","Naturen Premium 145 = 145.")}
+    ${setRow("Vlokpunt-factor","flocMult","×","Goudse kaas 2,5–3,5. Hoger = steviger wrongel.")}
+    ${toggleRow("Salpeter","salpeterOn","0,05 ml/L — aanbevolen bij rauwe melk tegen laat-los.")}
+    ${toggleRow("Calciumchloride","cacl2On","Bij rauwe melk meestal niet nodig; aan bij slappe wrongel.")}
+    ${setRow("Calciumchloride dosis","cacl2MlPerL","ml/L")}
+  </div>
+  <div class="card"><h2>Wrongel & wassen</h2>
+    ${setRow("Opbrengst","litersPerKg","L melk/kg","Wordt beter zodra je echte gewichten logt.")}
+    ${setRow("1e wei aftappen","whey1Pct","% melk")}
+    ${setRow("2e wei aftappen","whey2Pct","% melk")}
+    ${setRow("Temperatuur waswater","washWaterTemp","°C","Max. 65 °C.")}
+  </div>
+  <div class="card"><h2>Pers</h2>
+    ${setRow("Boring luchtcilinder","boreMm","mm")}
+    ${setRow("Overbrenging","pressRatio","×","1 = cilinder drukt direct op de volger. Hefboom 1:3 → 3.")}
+    ${setRow("Rendement","pressEff","0–1","Wrijving/afdichting; 0,9 is een veilige aanname.")}
+    ${setRow("Diameter kaasvorm","moldDiamCm","cm","Optioneel: toont ook de druk op de kaas in g/cm².")}
+    <h3>Persschema</h3><p class="small muted">Kracht als veelvoud van het kaasgewicht.</p>
+    <table class="t"><tr><th>Stap</th><th class="r">× gewicht</th><th class="r">min</th></tr>
+    ${s.press.map((p,i)=>`<tr><td>${esc(p.label)}</td><td class="r"><div class="inp" style="width:74px;margin-left:auto"><input type="text" inputmode="decimal" value="${p.mult}" data-field="press" data-i="${i}" data-k="mult"></div></td><td class="r"><div class="inp" style="width:74px;margin-left:auto"><input type="text" inputmode="decimal" value="${p.min}" data-field="press" data-i="${i}" data-k="min"></div></td></tr>`).join("")}</table>
+    <p class="small muted">Bij boring ${s.boreMm} mm: 1 bar ≈ ${nf(barToKg(1,s),1)} kg op de kaas.</p>
+    ${s.pressConfigured? "" : `<button class="btn sm gold" data-act="confirmPress">Cilindermaten kloppen</button>`}
+  </div>
+  <div class="card"><h2>Pekel & rijping</h2>
+    ${setRow("Pekeltijd","brineHPerKg","uur/kg","hobbykaas.nl: 1 uur per 100 g voor kleine kazen; grote wielen relatief korter. Start op 8 en stel bij op smaak.")}
+    ${setRow("Zoutgehalte pekel","brinePct","%")}
+    ${setRow("Pekelvolume (water)","brineL","L")}
+    ${setRow("Rijpingstemperatuur min","ripenTempMin","°C")}
+    ${setRow("Rijpingstemperatuur max","ripenTempMax","°C")}
+    <div class="field"><label>Herinneringstijd agenda</label><div class="inp"><input type="time" value="${esc(s.reminderTime)}" data-field="settingTxt" data-k="reminderTime"></div></div>
+  </div>
+  <div class="card"><h2>App</h2>
+    <p class="small"><b>Opslag:</b> <span id="syncMsg">${esc(syncMsg)}</span></p>
+    ${IS_ARTIFACT? `<p class="small muted">Deze versie draait in Claude. Voor offline gebruik, een eigen icoon op je beginscherm en agenda-herinneringen gebruik je de geïnstalleerde versie (zie hieronder).</p>`
+    : `<p class="small muted"><b>Op je iPhone zetten:</b> open deze pagina in Safari → deelknop → “Zet op beginscherm”. Daarna werkt de app ook offline.</p>`}
+    <div class="row"><button class="btn sm" data-act="exportJson">Back-up exporteren</button><button class="btn sm ghost" data-act="importJson">Importeren</button><button class="btn sm danger" data-act="resetSettings">Standaardwaarden</button></div>
+    <p class="small muted" style="margin-top:12px">Bronnen doseringen: Chr. Hansen (CHN-19, Naturen Premium 145) en hobbykaas.nl-recept voor Goudse kaas. Controleer altijd het etiket van je eigen verpakking.</p>
+  </div>`;
+}
+
+// ---------- Acties ----------
+function newBatch(){
+  const s = S.settings, id = uid(), nr = nextBatchNr();
+  const b = { id, nr, name:"Batch #"+nr+" — "+fmtDate(Date.now(),{day:"numeric",month:"short"}), createdAt:Date.now(), liters: s.liters, s: clone(Object.assign({}, s, {activeId:null,updatedAt:0})), status:"maken", stepIdx:0, steps:{}, log:[], targetWeeks:s.targetWeeks };
+  logEvent(b, "Batch gestart met "+s.liters+" L melk");
+  S.settings.activeId = id; saveSettings(); saveBatch(b); render();
+}
+function modal(html){ const m=document.createElement("div"); m.className="modal"; m.innerHTML=`<div class="sheet">${html}</div>`; m.addEventListener("click",e=>{ if(e.target===m) m.remove(); }); document.body.appendChild(m); return m; }
+function confirmBox(text, okLabel, onOk, danger){
+  const m = modal(`<p style="margin-top:0">${text}</p><div class="row"><button class="btn" data-x="no" style="flex:1">Annuleren</button><button class="btn ${danger?"danger":"primary"}" data-x="ok" style="flex:1">${okLabel}</button></div>`);
+  m.querySelector('[data-x="no"]').onclick=()=>m.remove(); m.querySelector('[data-x="ok"]').onclick=()=>{ m.remove(); onOk(); };
+}
+
+document.addEventListener("click", async e=>{
+  unlockAudio();
+  const el = e.target.closest("[data-act]"); if(!el) return;
+  const act = el.dataset.act, b = activeBatch();
+  switch(act){
+    case "tab": tab = el.dataset.tab; openBatchId=null; showStepList=false; render(); scrollTo(0,0); break;
+    case "wake": toggleWake(); break;
+    case "newBatch": newBatch(); scrollTo(0,0); break;
+    case "resume": S.settings.activeId = el.dataset.id; saveSettings(); tab="maken"; openBatchId=null; render(); break;
+    case "stepList": showStepList=!showStepList; render(); scrollTo(0,0); break;
+    case "gotoStep": b.stepIdx=+el.dataset.i; showStepList=false; saveBatch(b); render(); scrollTo(0,0); break;
+    case "prev": b.stepIdx=Math.max(0,b.stepIdx-1); saveBatch(b); render(); scrollTo(0,0); break;
+    case "next": { const steps=buildSteps(b), st=steps[b.stepIdx]; b.steps[st.id]=b.steps[st.id]||{}; if(!b.steps[st.id].doneAt){ b.steps[st.id].doneAt=Date.now(); logEvent(b,"✓ "+st.title); } b.stepIdx=Math.min(steps.length-1,b.stepIdx+1); saveBatch(b); render(); scrollTo(0,0); break; }
+    case "startTimer": { const steps=buildSteps(b), st=steps.find(x=>x.id===el.dataset.step), t=st.timers[+el.dataset.idx]; startTimer(b, st.id, +el.dataset.idx, t.label, t.min); break; }
+    case "stopTimer": stopTimer(b, false); break;
+    case "timerDone": e.stopPropagation(); stopTimer(b, true); break;
+    case "gotoTimerStep": if(b&&b.timer){ const steps=buildSteps(b); const i=steps.findIndex(x=>x.id===b.timer.stepId); if(i>=0){ b.stepIdx=i; tab="maken"; showStepList=false; saveBatch(b); render(); scrollTo(0,0);} } break;
+    case "calTimer": if(b&&b.timer){ await saveFile("kaas-timer.ics", makeIcs([{start:b.timer.endAt, title:"🧀 "+b.timer.label+" klaar", desc:b.name}]), "text/calendar"); } break;
+    case "rennetNow": b.rennetAt=Date.now(); b.flocAt=null; logEvent(b,"Stremsel toegevoegd"); saveBatch(b); render(); break;
+    case "rennetReset": b.rennetAt=null; b.flocAt=null; saveBatch(b); render(); break;
+    case "flocNow": { b.flocAt=Date.now(); const fm=(b.flocAt-b.rennetAt)/60000; logEvent(b,"Vlokpunt na "+nf(fm,1)+" min"); const cutAt=b.rennetAt+(b.flocAt-b.rennetAt)*b.s.flocMult; b.timer={stepId:"floc", idx:0, label:"Snijmoment", startAt:Date.now(), endAt:cutAt, alerted:false}; saveBatch(b); render(); break; }
+    case "flocTimer": { const cutAt=b.rennetAt+(b.flocAt-b.rennetAt)*b.s.flocMult; b.timer={stepId:"floc", idx:0, label:"Snijmoment", startAt:Date.now(), endAt:cutAt, alerted:false}; saveBatch(b); render(); break; }
+    case "flocReset": b.flocAt=null; if(b.timer&&b.timer.stepId==="floc") b.timer=null; saveBatch(b); render(); break;
+    case "setTarget": b.targetWeeks=+el.dataset.w; saveBatch(b); render(); break;
+    case "startRipening": { const steps=buildSteps(b), st=steps[b.stepIdx]; b.steps[st.id]=b.steps[st.id]||{}; b.steps[st.id].doneAt=Date.now(); b.status="rijpt"; b.ripenStart=Date.now(); b.targetWeeks=b.targetWeeks||S.settings.targetWeeks; b.timer=null; logEvent(b,"Rijping gestart, doel "+b.targetWeeks+" weken"); S.settings.activeId=null; saveSettings(); saveBatch(b); tab="rijp"; render(); scrollTo(0,0); toast("Rijping gestart 🧀"); break; }
+    case "pauseBatch": S.settings.activeId=null; saveSettings(); showStepList=false; render(); break;
+    case "abortBatch": confirmBox("Deze batch annuleren? Hij blijft in het logboek staan als geannuleerd.","Annuleren",()=>{ b.status="geannuleerd"; b.timer=null; logEvent(b,"Batch geannuleerd"); S.settings.activeId=null; saveSettings(); saveBatch(b); showStepList=false; render(); }, true); break;
+    case "openBatch": case "openBatchFromRipe": openBatchId=el.dataset.id; tab="log"; render(); scrollTo(0,0); break;
+    case "closeBatch": openBatchId=null; render(); break;
+    case "rate": { const x=S.batches[openBatchId]; x.rating=+el.dataset.n; saveBatch(x); render(); break; }
+    case "markDone": { const x=S.batches[el.dataset.id]; x.status="klaar"; logEvent(x,"Aangesneden / klaar"); saveBatch(x); render(); break; }
+    case "askDelete": confirmBox("Batch definitief verwijderen? Dit kan niet ongedaan worden.","Verwijderen",()=>{ deleteBatch(el.dataset.id); openBatchId=null; render(); }, true); break;
+    case "ripeTask": { const x=S.batches[el.dataset.id]; x.ripeDone=x.ripeDone||{}; const k=el.dataset.k; if(x.ripeDone[k]) delete x.ripeDone[k]; else x.ripeDone[k]=Date.now(); saveBatch(x); render(); break; }
+    case "ripeCatchup": { const x=S.batches[el.dataset.id]; x.ripeDone=x.ripeDone||{}; const today=startOfDay(Date.now()); ripenPlan(x).filter(p=>p.date<today).forEach(p=>p.tasks.forEach(t=>{ const k=dayKey(p.date)+"|"+t; if(!x.ripeDone[k]) x.ripeDone[k]=Date.now(); })); saveBatch(x); render(); break; }
+    case "addWeight": { const x=S.batches[el.dataset.id]; const v=num($("#w_"+x.id).value); if(!v){ toast("Vul een gewicht in"); break; } x.weights=x.weights||[]; x.weights.push({t:Date.now(), kg:v}); logEvent(x,"Gewogen: "+nf(v,2)+" kg"); saveBatch(x); toast("Gewicht opgeslagen"); render(); break; }
+    case "calRipen": { const x=S.batches[el.dataset.id]; const [hh,mm]=(S.settings.reminderTime||"19:00").split(":").map(Number); const today=startOfDay(Date.now()); const ev=ripenPlan(x).filter(p=>p.date>=today).map(p=>{ const d=new Date(p.date); d.setHours(hh,mm,0,0); return {start:d.getTime(), title:"🧀 "+x.name.split(" — ")[0]+": "+p.tasks.join(", "), desc:p.tasks.join("\n")}; }); await saveFile("rijping-"+x.nr+".ics", makeIcs(ev), "text/calendar"); break; }
+    case "toggle": S.settings[el.dataset.k]=!S.settings[el.dataset.k]; saveSettings(); render(); break;
+    case "confirmPress": S.settings.pressConfigured=true; saveSettings(); render(); toast("Persgegevens bevestigd"); break;
+    case "resetSettings": confirmBox("Alle instellingen terugzetten naar de standaardwaarden? Je batches blijven bewaard.","Terugzetten",()=>{ const keep={activeId:S.settings.activeId}; S.settings=Object.assign(clone(DEFAULTS), keep); saveSettings(); render(); }); break;
+    case "exportJson": { const ok = await saveFile("goudse-kaas-backup-"+dayKey(Date.now())+".json", JSON.stringify(S,null,1), "application/json"); if(ok) toast("Back-up gemaakt"); break; }
+    case "importJson": $("#importFile").click(); break;
+  }
+});
+
+document.addEventListener("change", e=>{
+  const el=e.target; const f=el.dataset&&el.dataset.field; if(!f) return;
+  const b=activeBatch();
+  if(f==="step"){ const r=(b.steps[el.dataset.step]=b.steps[el.dataset.step]||{}); r.values=r.values||{}; r.values[el.dataset.k]=el.value.trim(); saveBatch(b); if(["weight"].includes(el.dataset.k)||/wash|whey|rennet/.test(el.dataset.step)) softRender(); }
+  else if(f==="stepnote"){ const r=(b.steps[el.dataset.step]=b.steps[el.dataset.step]||{}); r.note=el.value; saveBatch(b); }
+  else if(f==="batchnote"){ const x=S.batches[openBatchId]; x.note=el.value; saveBatch(x); }
+  else if(f==="setting"){ const v=num(el.value); if(v==null){ render(); return; } S.settings[el.dataset.k]=v; if(el.dataset.k==="boreMm"||el.dataset.k==="pressRatio") S.settings.pressConfigured=true; saveSettings(); softRender(); }
+  else if(f==="settingTxt"){ S.settings[el.dataset.k]=el.value; saveSettings(); }
+  else if(f==="press"){ const v=num(el.value); if(v==null) return; S.settings.press[+el.dataset.i][el.dataset.k]=v; saveSettings(); softRender(); }
+  else if(f==="calc"){ const v=num(el.value); S.settings[el.dataset.k]=v; lsSave(); softRender(); }
+  else if(f==="calcL"){ calcL=num(el.value); softRender(); }
+});
+document.addEventListener("keydown", e=>{ if(e.key==="Enter" && e.target.tagName==="INPUT"){ e.target.blur(); } });
+
+$("#importFile").addEventListener("change", async e=>{
+  const file=e.target.files[0]; if(!file) return;
+  try{ const d=JSON.parse(await file.text()); if(!d.batches) throw 0;
+    let n=0; Object.values(d.batches).forEach(b=>{ const loc=S.batches[b.id]; if(!loc||(b.updatedAt||0)>(loc.updatedAt||0)){ S.batches[b.id]=b; queueWrite("b_"+b.id); n++; } });
+    if(d.settings && (d.settings.updatedAt||0)>(S.settings.updatedAt||0)){ S.settings=Object.assign(clone(DEFAULTS), d.settings); queueWrite("settings"); }
+    lsSave(); render(); toast(n+" batch(es) geïmporteerd");
+  }catch(err){ toast("Dit is geen geldig back-upbestand"); }
+  e.target.value="";
+});
+
+// ---------- Start ----------
+lsLoad();
+render();
+initRemote();
+if(!IS_ARTIFACT && "serviceWorker" in navigator && location.protocol==="https:"){ try{ navigator.serviceWorker.register("sw.js").catch(()=>{}); }catch(e){} }
+</script>
+</body>
+</html>
